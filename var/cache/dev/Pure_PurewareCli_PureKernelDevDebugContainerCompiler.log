@@ -1,9 +1,0 @@
-Symfony\Component\DependencyInjection\Compiler\RemovePrivateAliasesPass: Removed service "Psr\Container\ContainerInterface"; reason: private alias.
-Symfony\Component\DependencyInjection\Compiler\RemovePrivateAliasesPass: Removed service "Symfony\Component\DependencyInjection\ContainerInterface"; reason: private alias.
-Symfony\Component\DependencyInjection\Compiler\RemovePrivateAliasesPass: Removed service "Pure\PurewareCli\Maker\MakerInterface"; reason: private alias.
-Symfony\Component\DependencyInjection\Compiler\RemovePrivateAliasesPass: Removed service "Pure\PurewareCli\Resolver\NamespaceResolverInterface"; reason: private alias.
-Symfony\Component\DependencyInjection\Compiler\RemoveUnusedDefinitionsPass: Removed service "Pure\PurewareCli\DependencyInjection\CommandsToApplicationCompilerPass"; reason: unused.
-Symfony\Component\DependencyInjection\Compiler\RemoveUnusedDefinitionsPass: Removed service "Pure\PurewareCli\Maker\Entity\EntityMaker"; reason: unused.
-Symfony\Component\DependencyInjection\Compiler\RemoveUnusedDefinitionsPass: Removed service "Pure\PurewareCli\PureKernel"; reason: unused.
-Symfony\Component\DependencyInjection\Compiler\RemoveUnusedDefinitionsPass: Removed service "Pure\PurewareCli\Resolver\PluginNamespaceResolver"; reason: unused.
-Symfony\Component\DependencyInjection\Compiler\InlineServiceDefinitionsPass: Inlined service "Pure\PurewareCli\Command\Entity\MakeEntityCommand" to "Symfony\Component\Console\Application".
