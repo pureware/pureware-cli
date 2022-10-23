@@ -1,8 +1,7 @@
 <?php
 
-namespace Pureware\PurewareCli\Command\Entity;
+namespace Pureware\PurewareCli\Command\Migration;
 
-use Pureware\PurewareCli\Maker\Entity\EntityMaker;
 use Pureware\PurewareCli\Maker\Migration\MigrationMaker;
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
 use Pureware\PurewareCli\Resolver\PluginNamespaceResolver;
@@ -17,28 +16,26 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\String\UnicodeString;
 
-class MakeEntityCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
+class MakeMigrationCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
-    protected static $defaultName = 'make:entity';
+    protected static $defaultName = 'make:migration';
 
     protected function configure()
     {
         $this
             ->setName(self::$defaultName)
-            ->setDescription('Create new entity (definition, entity and collection)')
-            ->addArgument('name', InputArgument::REQUIRED, 'The entity name in PascalCase')
-            ->addOption('translation', 't', InputOption::VALUE_NONE, 'Generate a translation', null)
-            ->addOption('migration', 'm', InputOption::VALUE_NONE, 'Generate a migration file', null)
-            ->addOption('hydrator', null, InputOption::VALUE_NONE, 'Generate a EntityHydrator file', null)
-            ->addOption('many2many', null, InputOption::VALUE_NONE, 'Generate a ManyToManyAssociation file', null)
-            ->addOption('prefix', null, InputOption::VALUE_OPTIONAL, 'The table prefix for entity', '');
+            ->setDescription('Create new migration')
+            ->addArgument('suffix', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Additional migration name', []);
         parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        (new EntityMaker(new MigrationMaker()))->make($this->getNamespaceResolver(), $input);
+        $input->setOption('force', true);
+        $suffix = (new UnicodeString(implode(' ', $input->getArgument('suffix'))))->camel()->title();
+        (new MigrationMaker())->make($this->getNamespaceResolver(), $input, ['suffix' => $suffix]);
 
         return Command::SUCCESS;
     }

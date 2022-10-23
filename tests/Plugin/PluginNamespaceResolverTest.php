@@ -1,9 +1,9 @@
 <?php
 
-namespace Pure\PurewareCli\Tests\Plugin;
+namespace Pureware\PurewareCli\Tests\Plugin;
 
-use Pure\PurewareCli\Resolver\NamespaceResolverInterface;
-use Pure\PurewareCli\Resolver\PluginNamespaceResolver;
+use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
+use Pureware\PurewareCli\Resolver\PluginNamespaceResolver;
 
 class PluginNamespaceResolverTest extends \PHPUnit\Framework\TestCase
 {

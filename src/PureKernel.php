@@ -1,7 +1,7 @@
 <?php
-namespace Pure\PurewareCli;
+namespace Pureware\PurewareCli;
 
-use Pure\PurewareCli\DependencyInjection\CommandsToApplicationCompilerPass;
+use Pureware\PurewareCli\DependencyInjection\CommandsToApplicationCompilerPass;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Pure\PurewareCli\Tests\Plugin;
+namespace Pureware\PurewareCli\Tests\Plugin;
 
 use PHPUnit\Framework\TestCase;
 

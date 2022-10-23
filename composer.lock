@@ -58,16 +58,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.239.1",
+            "version": "3.240.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "47aa3e427371af4449cd9cb07af7209376a535bb"
+                "reference": "95186e6a40670196cc2f9f752a38b863aa45a890"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/47aa3e427371af4449cd9cb07af7209376a535bb",
-                "reference": "47aa3e427371af4449cd9cb07af7209376a535bb",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/95186e6a40670196cc2f9f752a38b863aa45a890",
+                "reference": "95186e6a40670196cc2f9f752a38b863aa45a890",
                 "shasum": ""
             },
             "require": {
@@ -146,9 +146,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.239.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.240.0"
             },
-            "time": "2022-10-19T18:15:49+00:00"
+            "time": "2022-10-21T20:17:33+00:00"
         },
         {
             "name": "brick/math",
@@ -2930,7 +2930,7 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v9.36.3",
+            "version": "v9.36.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -2985,7 +2985,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v9.36.3",
+            "version": "v9.36.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -3031,7 +3031,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v9.36.3",
+            "version": "v9.36.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -3079,7 +3079,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v9.36.3",
+            "version": "v9.36.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -4938,7 +4938,7 @@
             "dist": {
                 "type": "path",
                 "url": "/Users/roj/dev/private/pure/template-generator",
-                "reference": "8d864b03e47ab02be420fe30e0ece360b4b3ef8c"
+                "reference": "fb66b7b0d7689b5cf4ae7a6371e946af83679667"
             },
             "require": {
                 "illuminate/collections": "^9.30",

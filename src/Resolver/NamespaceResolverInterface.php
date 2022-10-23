@@ -1,6 +1,6 @@
 <?php
 
-namespace Pure\PurewareCli\Resolver;
+namespace Pureware\PurewareCli\Resolver;
 
 interface NamespaceResolverInterface
 {

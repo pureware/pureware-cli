@@ -6,7 +6,7 @@
     "bin": ["bin/pure"],
     "autoload": {
         "psr-4": {
-            "Pure\\PurewareCli\\": "src/"
+            "Pureware\\PurewareCli\\": "src/"
         }
     },
     "minimum-stability": "dev",
