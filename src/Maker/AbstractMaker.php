@@ -6,12 +6,13 @@ use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
 use Pureware\TemplateGenerator\Generator\DirectoryGenerator;
 use Pureware\TemplateGenerator\Generator\GeneratorInterface;
 use Pureware\TemplateGenerator\Parser\TwigParser;
+use Pureware\TemplateGenerator\TreeBuilder\Directory\DirectoryCollection;
 use Symfony\Component\Console\Input\InputInterface;
 
 class AbstractMaker implements \Pureware\PurewareCli\Maker\MakerInterface
 {
 
-    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): void
+    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
     {
         throw new \RuntimeException('make() method not implemented.');
     }

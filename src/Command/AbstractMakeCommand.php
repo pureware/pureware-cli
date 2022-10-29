@@ -3,11 +3,15 @@ namespace Pureware\PurewareCli\Command;
 
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
 use Pureware\PurewareCli\Resolver\PluginNamespaceResolver;
+use Pureware\TemplateGenerator\TreeBuilder\Directory\Directory;
+use Pureware\TemplateGenerator\TreeBuilder\Directory\DirectoryCollection;
+use Pureware\TemplateGenerator\TreeBuilder\File\File;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 abstract class AbstractMakeCommand extends Command
 {
@@ -36,6 +40,35 @@ abstract class AbstractMakeCommand extends Command
         $pluginNamespaceResolver->resolvePluginNamespace($composerJson);
 
         return $pluginNamespaceResolver;
+    }
+
+    protected function renderMaker(DirectoryCollection $dirs, InputInterface $input, OutputInterface $output, NamespaceResolverInterface $namespaceResolver) {
+
+        $io = new SymfonyStyle($input, $output);
+        $output->writeln('/Users/roj/dev/private/pure/PureNewPlugin/composer.json');
+        $io->title('Files created in: ' . $namespaceResolver->getWorkingDir());
+
+        foreach ($dirs as $dir) {
+            $this->addFile($io, $dir->getName());
+
+            $this->renderDir($dir, $io);
+        }
+    }
+
+    protected function renderDir(Directory $directory, SymfonyStyle $io, $depth = 0) {
+
+        /** @var File $file */
+        foreach ($directory->getFiles() as $file) {
+            $this->addFile($io, $file->getParsedFileName(), $depth + 1);
+        }
+        foreach ($directory->getDirectories() as $dir) {
+            $this->renderDir($dir, $io, $depth + 1);
+        }
+    }
+
+    protected function addFile(SymfonyStyle $io, string $path, int $depth = 0) {
+        $space = str_repeat("  ", $depth);
+        $io->writeln(sprintf('|%s -- %s', $space, $path));
     }
 
 }

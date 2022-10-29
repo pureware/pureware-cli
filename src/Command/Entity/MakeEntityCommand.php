@@ -5,18 +5,17 @@ namespace Pureware\PurewareCli\Command\Entity;
 use Pureware\PurewareCli\Maker\Entity\EntityMaker;
 use Pureware\PurewareCli\Maker\Migration\MigrationMaker;
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
-use Pureware\PurewareCli\Resolver\PluginNamespaceResolver;
-use Pureware\TemplateGenerator\Generator\DirectoryGenerator;
-use Pureware\TemplateGenerator\Parser\TwigParser;
-use Pureware\TemplateGenerator\TreeBuilder\TreeBuilder;
+use Pureware\TemplateGenerator\TreeBuilder\Directory\Directory;
+use Pureware\TemplateGenerator\TreeBuilder\Directory\DirectoryCollection;
+use Pureware\TemplateGenerator\TreeBuilder\File\File;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class MakeEntityCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
@@ -38,8 +37,11 @@ class MakeEntityCommand extends \Pureware\PurewareCli\Command\AbstractMakeComman
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        (new EntityMaker(new MigrationMaker()))->make($this->getNamespaceResolver(), $input);
+        $namespaceResolver = $this->getNamespaceResolver();
+        $dirs = (new EntityMaker(new MigrationMaker()))->make($namespaceResolver, $input);
+        $this->renderMaker($dirs, $input, $output, $namespaceResolver);
 
         return Command::SUCCESS;
     }
+
 }
