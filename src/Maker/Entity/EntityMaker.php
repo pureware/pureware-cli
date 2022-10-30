@@ -55,7 +55,7 @@ class EntityMaker extends AbstractMaker implements MakerInterface
         $subDir->setDirectories(new DirectoryCollection([$entityDirectory]));
         $createdDirectories = new DirectoryCollection([$subDir]);
         if ($input->getOption('migration')) {
-            $createdDirectories = $createdDirectories->merge($this->migrationMaker->make($namespaceResolver, $input, ['suffix' => $entityName]));
+            $createdDirectories = $createdDirectories->merge($this->migrationMaker->make($namespaceResolver, $input, array_merge(['suffix' => $entityName], $options)));
         }
 
         return $createdDirectories;

@@ -6,6 +6,7 @@ class PluginNamespaceResolver implements NamespaceResolverInterface
 {
 
     protected string $pluginBaseNamespace;
+
     protected string $pluginSrcPath;
 
     public function resolvePluginNamespace(string $composerJson)
@@ -38,13 +39,13 @@ class PluginNamespaceResolver implements NamespaceResolverInterface
     public function getFullNamespace(?string $additional = null): string
     {
         if (!$additional) {
-            return $this->pluginBaseNamespace;
+            return $this->getPluginBaseNamespace();
         }
 
         $additional = trim($additional, '/');
         $additional = rtrim($additional, '/');
         $additional = str_replace('/', '\\', $additional);
-        return $this->pluginBaseNamespace . '\\' . $additional;
+        return $this->getPluginBaseNamespace() . '\\' . $additional;
     }
 
     public function isNamespace(string $path): bool
@@ -56,11 +57,21 @@ class PluginNamespaceResolver implements NamespaceResolverInterface
     public function getWorkingDir(?string $additional = null): string
     {
         if (!$additional) {
-            return $this->pluginSrcPath;
+            return $this->getPluginSrcPath();
         }
 
         $additional = trim($additional, '/');
         $additional = rtrim($additional, '/');
-        return $this->pluginSrcPath . DIRECTORY_SEPARATOR . $additional;
+        return $this->getPluginSrcPath() . DIRECTORY_SEPARATOR . $additional;
+    }
+
+    public function getPluginBaseNamespace(): string
+    {
+        return $this->pluginBaseNamespace;
+    }
+
+    protected function getPluginSrcPath(): string
+    {
+        return $this->pluginSrcPath;
     }
 }

@@ -21,7 +21,7 @@ class MigrationMaker extends AbstractMaker implements MakerInterface
         $generator->getParser()->setTemplateData(
             [
                 'suffix' => $options['suffix'] ?? '',
-                'timestamp' => $this->getTimestamp()
+                'timestamp' => $options['timestamp'] ?? $this->getTimestamp()
             ]
         );
 
