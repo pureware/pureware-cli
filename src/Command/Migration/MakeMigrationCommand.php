@@ -35,7 +35,10 @@ class MakeMigrationCommand extends \Pureware\PurewareCli\Command\AbstractMakeCom
     {
         $input->setOption('force', true);
         $suffix = (new UnicodeString(implode(' ', $input->getArgument('suffix'))))->camel()->title();
-        (new MigrationMaker())->make($this->getNamespaceResolver(), $input, ['suffix' => $suffix]);
+        $namespaceResolver = $this->getNamespaceResolver();
+        $dirs = (new MigrationMaker())->make($namespaceResolver, $input, ['suffix' => $suffix]);
+        $this->renderMaker($dirs, $input, $output, $namespaceResolver);
+
 
         return Command::SUCCESS;
     }
