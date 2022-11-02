@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eacffbe0c3555356ccc91273a5c9634f",
+    "content-hash": "aa4d3a4300a1d69e9645c8e1a111bf52",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -4934,11 +4934,17 @@
         },
         {
             "name": "pureware/template-generator",
-            "version": "dev-main",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pureware/template-generator.git",
+                "reference": "d0118308db8b3c461ae9b769f0254fd934510fbb"
+            },
             "dist": {
-                "type": "path",
-                "url": "/Users/roj/dev/private/pure/template-generator",
-                "reference": "fb66b7b0d7689b5cf4ae7a6371e946af83679667"
+                "type": "zip",
+                "url": "https://api.github.com/repos/pureware/template-generator/zipball/d0118308db8b3c461ae9b769f0254fd934510fbb",
+                "reference": "d0118308db8b3c461ae9b769f0254fd934510fbb",
+                "shasum": ""
             },
             "require": {
                 "illuminate/collections": "^9.30",
@@ -4957,6 +4963,7 @@
                     "Pureware\\TemplateGenerator\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4967,9 +4974,11 @@
                 }
             ],
             "description": "PHP based file generator with twig templates",
-            "transport-options": {
-                "relative": false
-            }
+            "support": {
+                "issues": "https://github.com/pureware/template-generator/issues",
+                "source": "https://github.com/pureware/template-generator/tree/0.1.0"
+            },
+            "time": "2022-11-02T11:12:08+00:00"
         },
         {
             "name": "queue-interop/amqp-interop",
@@ -13106,9 +13115,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "pureware/template-generator": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
