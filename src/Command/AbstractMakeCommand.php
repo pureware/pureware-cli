@@ -45,8 +45,10 @@ abstract class AbstractMakeCommand extends Command
     protected function renderMaker(DirectoryCollection $dirs, InputInterface $input, OutputInterface $output, NamespaceResolverInterface $namespaceResolver) {
 
         $io = new SymfonyStyle($input, $output);
-        $output->writeln('/Users/roj/dev/private/pure/PureNewPlugin/composer.json');
-        $io->title('Files created in: ' . $namespaceResolver->getWorkingDir());
+        $workingPath = $namespaceResolver->getWorkingDir();
+        $home = $_SERVER['HOME'];
+
+        $io->title('Files created in: ' . str_replace($home, '~', $workingPath));
 
         foreach ($dirs as $dir) {
             $this->addFile($io, $dir->getName());
