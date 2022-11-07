@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+ 
+  shop:
+    image: dockware/dev:{{dockwareVersion}}
+    container_name: {{containerName}}
+    volumes:
+      - "db_volume:/var/lib/mysql"
+      - "./boot_end.sh:/var/www/boot_end.sh"
+      - "./:/var/www/html/custom/plugins/{{pluginName}}"
+      # exclude by using anonymous volumes
+      - "/var/www/html/custom/plugins/{{pluginName}}/.git/"
+      - "/var/www/html/custom/plugins/{{pluginName}}/vendor/"
+      - "/var/www/html/custom/plugins/{{pluginName}}/src/Resources/app/administration/node_modules/"
+      - "/var/www/html/custom/plugins/{{pluginName}}/src/Resources/app/storefront/node_modules/"
+    ports:
+      - "80:80"
+      - "3306:3306"
+      - "22:22"
+      - "8888:8888"
+      - "8080:8080"
+      - "9999:9999"
+      - "9998:9998"
+        
+    networks:
+      - web
+    environment:
+      - XDEBUG_ENABLED=1
+      - PHP_VERSION={{dockwarePhpVersion}}
+
+volumes:
+    db_volume:
+        driver: local
+ 
+networks:
+    web:
+        external: false
