@@ -2,7 +2,6 @@
 
 namespace Pureware\PurewareCli\Generator\Plugin;
 
-use GuzzleHttp\Client;
 use Pureware\PurewareCli\Generator\GeneratorInterface;
 use Pureware\TemplateGenerator\Generator\DirectoryGenerator;
 use Pureware\TemplateGenerator\Parser\TwigParser;
@@ -12,7 +11,6 @@ use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 use Symfony\Component\String\Slugger\AsciiSlugger;
@@ -45,6 +43,10 @@ class PluginGenerator implements GeneratorInterface
                 $dockwareVersion = $io->ask('Input a dockware and shopware version', $dockwareVersion);
                 $this->shopwareVersion = $dockwareVersion;
             }
+        }
+
+        if (version_compare($this->shopwareVersion, '6', '>=') === false) {
+            throw new \RuntimeException('The Plugin Generator only works for shopware 6');
         }
 
         $this->resolveNamespace();
