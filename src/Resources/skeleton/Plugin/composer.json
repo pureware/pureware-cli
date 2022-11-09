@@ -10,6 +10,9 @@
     "shopware/administration": "{{shopwareVersion}}",
     "shopware/storefront": "{{shopwareVersion}}"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  },
   "autoload": {
     "psr-4": {
       "{{namespace|replace({'\\': '\\\\'})}}\\": "src/"
