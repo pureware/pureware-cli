@@ -68,7 +68,7 @@ class PluginGenerator implements GeneratorInterface
                 'composerDescriptionDe' => $this->pluginName,
                 'phpVersion' => version_compare('6.5', $this->shopwareVersion) > 0 ? '^7.4.3 || ^8.0' : '^8.0',
                 'dockwarePhpVersion' => version_compare('6.5', $this->shopwareVersion) > 0 ? '7.4' : '8.0',
-                'shopwareVersion' =>  '^' . pathinfo( $this->shopwareVersion, PATHINFO_FILENAME),
+                'shopwareVersion' =>  '~' . pathinfo( $this->shopwareVersion, PATHINFO_FILENAME),
                 'dockwareVersion' => $dockwareVersion,
                 'containerName' => 'shop_plugin'
             ]
@@ -87,9 +87,12 @@ class PluginGenerator implements GeneratorInterface
 
         $commands = [
             $this->findComposer() . ' install --working-dir=' . $pluginPath,
-            sprintf('echo "%s"', 'PURE installed composer dependencies'),
+            $this->findComposer() . ' require --dev phpstan/phpstan phpunit/phpunit --working-dir=' . $pluginPath,
+            sprintf('echo "%s"'
+                , 'PURE installed composer dependencies'),
             sprintf('ls -la %s', $pluginPath)
         ];
+
         $this->executeCommands($commands, $output);
         $io->progressAdvance(1);
         $output->writeln('');
