@@ -68,7 +68,7 @@ class PluginGenerator implements GeneratorInterface
                 'composerDescriptionDe' => $this->pluginName,
                 'phpVersion' => version_compare('6.5', $this->shopwareVersion) > 0 ? '^7.4.3 || ^8.0' : '^8.0',
                 'dockwarePhpVersion' => version_compare('6.5', $this->shopwareVersion) > 0 ? '7.4' : '8.0',
-                'shopwareVersion' => $this->shopwareVersion,
+                'shopwareVersion' =>  '^' . pathinfo( $this->shopwareVersion, PATHINFO_FILENAME),
                 'dockwareVersion' => $dockwareVersion,
                 'containerName' => 'shop_plugin'
             ]
