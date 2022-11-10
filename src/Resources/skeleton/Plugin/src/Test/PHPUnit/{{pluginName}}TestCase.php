@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace {{namespace}}
+namespace {{namespace}}\Test\PHPUnit;
 
 use PHPUnit\Framework\TestCase;
 
