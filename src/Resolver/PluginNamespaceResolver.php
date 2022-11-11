@@ -9,6 +9,8 @@ class PluginNamespaceResolver implements NamespaceResolverInterface
 
     protected string $pluginSrcPath;
 
+    protected string $pluginName;
+
     public function resolvePluginNamespace(string $composerJson)
     {
         $separator = '_NAMESPACE_SEPARATOR_';
@@ -28,6 +30,7 @@ class PluginNamespaceResolver implements NamespaceResolverInterface
             $namespace = str_replace($separator, '\\', key($path));
             $namespace = str_replace('\\\\', '\\', $namespace);
             $this->pluginBaseNamespace = rtrim($namespace, '\\');
+            $this->pluginName = str_replace('\\', '', $this->pluginBaseNamespace);
             $this->pluginSrcPath = getcwd() . DIRECTORY_SEPARATOR . rtrim(current($path), '/');
         }
 
@@ -73,5 +76,10 @@ class PluginNamespaceResolver implements NamespaceResolverInterface
     protected function getPluginSrcPath(): string
     {
         return $this->pluginSrcPath;
+    }
+
+    public function getPluginName(): string
+    {
+        return $this->pluginName;
     }
 }
