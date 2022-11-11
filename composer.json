@@ -19,6 +19,7 @@
         "symfony/string": "^6.0",
         "ext-json": "*",
         "shopware/core": "^6.4",
+        "shopware/storefront": "^6.4",
         "pureware/template-generator": "0.1.0"
     },
     "require-dev": {
