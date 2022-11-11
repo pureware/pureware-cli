@@ -4,6 +4,9 @@ namespace Pureware\PurewareCli\Tests\Plugin;
 
 use PHPUnit\Framework\TestCase;
 use Pureware\PurewareCli\Maker\Entity\EntityMaker;
+use Pureware\PurewareCli\Maker\Entity\HydratorMaker;
+use Pureware\PurewareCli\Maker\Entity\Many2ManyMaker;
+use Pureware\PurewareCli\Maker\Entity\TranslationMaker;
 use Pureware\PurewareCli\Maker\Migration\MigrationMaker;
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
 use Pureware\PurewareCli\Resolver\PluginNamespaceResolver;
@@ -20,7 +23,7 @@ class EntityMakerTest extends TestCase
 
     public function test_command_creates_new_entity()
     {
-        $maker = new EntityMaker(new MigrationMaker());
+        $maker = new EntityMaker(new MigrationMaker(), new HydratorMaker(), new Many2ManyMaker(), new TranslationMaker());
         $namespaceResolver = $this->getNamespaceResolver();
         $input = $this->getInputInterface();
         $maker->make($namespaceResolver, $input, ['timestamp' => 1667133679]);

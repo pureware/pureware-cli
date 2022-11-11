@@ -1,0 +1,30 @@
+{
+  "name": "{{composerName}}",
+  "description": "{{composerDescriptionEn}}",
+  "type": "shopware-platform-plugin",
+  "license": "proprietary",
+  "authors": [],
+  "require": {
+    "php": "{{phpVersion}}",
+    "shopware/core": "{{shopwareVersion}}",
+    "shopware/administration": "{{shopwareVersion}}",
+    "shopware/storefront": "{{shopwareVersion}}"
+  },
+  "autoload": {
+    "psr-4": {
+      "{{namespace|replace({'\\': '\\\\'})}}\\": "src/"
+    }
+  },
+  "extra": {
+    "shopware-plugin-class": "{{namespace|replace({'\\': '\\\\'})}}\\{{pluginName}}",
+    "copyright": "{{copyright}}",
+    "description": {
+      "de-DE": "{{pluginName}}",
+      "en-GB": "{{pluginName}}"
+    },
+    "label": {
+      "de-DE": "{{composerDescriptionDe}}",
+      "en-GB": "{{composerDescriptionEn}}"
+    }
+  }
+}

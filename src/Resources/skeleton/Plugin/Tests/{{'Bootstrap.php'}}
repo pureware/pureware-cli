@@ -1,0 +1,17 @@
+<?php declare(strict_types=1);
+
+use Pure\NewPlugin\Tests\TestBootstrapper;
+
+require __DIR__ . '/TestBootstrapper.php';
+
+$projectDir = dirname(__DIR__, 4);
+
+return (new TestBootstrapper())
+    ->setProjectDir($_SERVER['PROJECT_ROOT'] ?? $projectDir)
+    ->setLoadEnvFile(true)
+    ->setForceInstallPlugins(true)
+    ->addActivePlugins('{{pluginName}}')
+    ->addCallingPlugin()
+    ->bootstrap()
+    ->setClassLoader(require $projectDir . '/vendor/autoload.php')
+    ->getClassLoader();
