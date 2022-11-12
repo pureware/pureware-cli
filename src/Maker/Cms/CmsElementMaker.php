@@ -38,7 +38,7 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
             'sw-cms' => [
                 'elements' => [
                     ( new UnicodeString($options['elementName'] ?? $input->getArgument('name')))->camel()->toString() => [
-                        'label' => 'YouCustomLabel'
+                        'label' => 'Your Custom Label'
                     ]
                 ]
             ]
