@@ -1,8 +1,8 @@
-{% set blockName = 'element' ~ elementName %}
-{{'{%'}} block {{blockName|u.snake}} {{'%}'}}
+{% set twigBlockName = 'element_' ~ elementName %}
+{{'{%'}} block {{twigBlockName|u.snake}} {{'%}'}}
     <div class="cms-element-{{elementName|u.snake|slug}}">
         {{'{%'}} block element_{{elementName|u.snake}}_inner {{'%}'}}
-            <div class="cms-el-dailymotion">
+            <div class="cms-el-{{elementName|u.snake|slug}}">
                 PURE Custom Element
             </div>
         {{'{%'}} endblock {{'%}'}}

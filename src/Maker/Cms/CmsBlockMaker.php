@@ -11,32 +11,26 @@ use Pureware\TemplateGenerator\TreeBuilder\TreeBuilder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\String\UnicodeString;
 
-class CmsElementMaker extends AbstractMaker implements MakerInterface
+class CmsBlockMaker extends AbstractMaker implements MakerInterface
 {
-
-    private MakerInterface $cmsElementResolverMaker;
-
-    public function __construct(
-        MakerInterface $cmsElementResolverMaker
-    ) {
-        $this->cmsElementResolverMaker = $cmsElementResolverMaker;
-    }
 
     public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection {
         $subDirectory = 'Resources/app/administration/src';
-        $cmsElementName = $options['elementName'] ?? $input->getArgument('name');
+        $cmsBlockName = $options['cmsBlockName'] ?? $input->getArgument('name');
 
         $generator = $this->getDirectoryGenerator($namespaceResolver, $input, $subDirectory);
         $generator->getParser()->setTemplateData(
             [
-                'elementName' => $cmsElementName,
+                'blockName' => $cmsBlockName,
                 'moduleName' => 'sw-cms',
+                'blockCategory' => $input->getOption('category'),
                 'mainJsContent' => $this->getMainJsContent($namespaceResolver)
             ]
         );
 
+
         $builder = new TreeBuilder();
-        $builder->skip(['module/{{moduleName}}/blocks']);
+        $builder->skip(['module/{{moduleName}}/elements']);
 
         $directory = $builder->buildTree($this->getTemplatePath('Cms/Element'), $namespaceResolver->getFullNamespace($subDirectory), $subDirectory);
         $generator->generate($directory);
@@ -48,8 +42,8 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
         // like: sw-cms.elements.camelCaseCmsElementName.label => YouCustomLabel
         $baseSnippet = [
             'sw-cms' => [
-                'elements' => [
-                    ( new UnicodeString($options['elementName'] ?? $input->getArgument('name')))->camel()->toString() => [
+                'blocks' => [
+                    ( new UnicodeString($options['cmsBlockName'] ?? $input->getArgument('name')))->camel()->toString() => [
                         'label' => 'Your Custom Label'
                     ]
                 ]
@@ -57,13 +51,7 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
         ];
 
         $snippetCollection = $this->makeSnippetFiles($namespaceResolver, $input, ['subDirectory' => $snippetDirectory, 'moduleName' => $moduleName, 'baseSnippet' => json_encode($baseSnippet, JSON_PRETTY_PRINT) ?: '']);
-        $storefrontCollection = $this->makeStorefrontElementFile($namespaceResolver, $input, ['elementName' => $cmsElementName]);
-
-        if ($input->getOption('resolver')) {
-            $resolver = $this->cmsElementResolverMaker->make($namespaceResolver, $input, ['elementName' => $cmsElementName]);
-
-            return (new DirectoryCollection([$directory]))->merge($snippetCollection)->merge($storefrontCollection)->merge($resolver);
-        }
+        $storefrontCollection = $this->makeStorefrontElementFile($namespaceResolver, $input, ['blockName' => $cmsBlockName]);
 
         return (new DirectoryCollection([$directory]))->merge($snippetCollection)->merge($storefrontCollection);
     }
@@ -84,20 +72,20 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
     protected function makeStorefrontElementFile(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
     {
 
-        if (!$options['elementName']) {
-            throw new \RuntimeException('You need to pass a elementName to create storefront file');
+        if (!$options['blockName']) {
+            throw new \RuntimeException('You need to pass a blockName to create storefront file');
         }
 
         $collection = new DirectoryCollection();
-        $subdirectory = 'Resources/views/storefront/element/';
+        $subdirectory = 'Resources/views/storefront/block/';
         $generator = $this->getDirectoryGenerator($namespaceResolver, $input, $subdirectory);
         $generator->getParser()->setTemplateData(
             [
-                'elementName' => $options['elementName']
+                'blockName' => $options['blockName']
             ]
         );
 
-        $directory = (new TreeBuilder())->buildTree($this->getTemplatePath('Cms/Storefront/Element'), $namespaceResolver->getFullNamespace($subdirectory), $subdirectory);
+        $directory = (new TreeBuilder())->buildTree($this->getTemplatePath('Cms/Storefront/Block'), $namespaceResolver->getFullNamespace($subdirectory), $subdirectory);
         $collection->add($directory);
         $generator->generate($directory);
 

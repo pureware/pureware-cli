@@ -1,0 +1,10 @@
+{% set twigBlockName = moduleName ~ '_block_' ~ blockName %}
+{{'{%'}} block {{twigBlockName|u.snake}} {{'%}'}}
+    <div class="{{moduleName}}-block-{{blockName|u.snake|slug}}">
+        <slot name="main">
+            {{'{%'}} block {{blockName|u.snake}}_slot {{'%}'}}
+            PURE Block Slot
+            {{'{%'}} endblock {{'%}'}}
+        </slot>
+    </div>
+{{'{%'}} endblock {{'%}'}}
