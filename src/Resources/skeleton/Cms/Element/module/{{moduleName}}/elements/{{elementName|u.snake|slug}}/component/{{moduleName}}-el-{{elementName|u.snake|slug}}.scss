@@ -1,0 +1,5 @@
+{% set baseClass = moduleName ~ '-el-' ~ elementName %}
+.{{baseClass|u.snake|slug}} {
+  height: 100%;
+  width: 100%;
+}

@@ -1,0 +1,8 @@
+{% set blockName = moduleName ~ '_element_' ~ elementName ~ '_preview' %}
+{{'{%'}} block {{blockName|u.snake}} {{'%}'}}
+    <div class="{{moduleName}}-el-{{elementName|u.snake|slug}}">
+        <div class="{{moduleName}}-el-{{elementName|u.snake|slug}}-wrapper">
+            Your element
+        </div>
+    </div>
+{{'{%'}} endblock {{'%}'}}
