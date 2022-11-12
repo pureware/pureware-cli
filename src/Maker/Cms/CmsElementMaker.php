@@ -13,6 +13,15 @@ use Symfony\Component\String\UnicodeString;
 
 class CmsElementMaker extends AbstractMaker implements MakerInterface
 {
+
+    private MakerInterface $cmsElementResolverMaker;
+
+    public function __construct(
+        MakerInterface $cmsElementResolverMaker
+    ) {
+        $this->cmsElementResolverMaker = $cmsElementResolverMaker;
+    }
+
     public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection {
         $subDirectory = 'Resources/app/administration/src';
         $cmsElementName = $options['elementName'] ?? $input->getArgument('name');
@@ -46,6 +55,12 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
 
         $snippetCollection = $this->makeSnippetFiles($namespaceResolver, $input, ['subDirectory' => $snippetDirectory, 'moduleName' => $moduleName, 'baseSnippet' => json_encode($baseSnippet, JSON_PRETTY_PRINT) ?: '']);
         $storefrontCollection = $this->makeStorefrontElementFile($namespaceResolver, $input, ['elementName' => $cmsElementName]);
+
+        if ($input->getOption('resolver')) {
+            $resolver = $this->cmsElementResolverMaker->make($namespaceResolver, $input, ['elementName' => $cmsElementName]);
+
+            return (new DirectoryCollection([$directory]))->merge($snippetCollection)->merge($storefrontCollection)->merge($resolver);
+        }
 
         return (new DirectoryCollection([$directory]))->merge($snippetCollection)->merge($storefrontCollection);
     }

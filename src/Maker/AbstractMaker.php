@@ -7,8 +7,10 @@ use Pureware\TemplateGenerator\Generator\DirectoryGenerator;
 use Pureware\TemplateGenerator\Generator\GeneratorInterface;
 use Pureware\TemplateGenerator\Parser\TwigParser;
 use Pureware\TemplateGenerator\TreeBuilder\Directory\DirectoryCollection;
+use Pureware\TemplateGenerator\TreeBuilder\File\File;
 use Pureware\TemplateGenerator\TreeBuilder\TreeBuilder;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class AbstractMaker implements \Pureware\PurewareCli\Maker\MakerInterface
 {
@@ -60,5 +62,21 @@ class AbstractMaker implements \Pureware\PurewareCli\Maker\MakerInterface
         }
 
         return $collection;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param array<string> $options
+     * @param string|null $default
+     * @return string
+     */
+    protected function getSubDirectory(InputInterface $input, array $options, ?string $default = null): string {
+        $subDirectory = $input->getOption('workingDir') ?? $options['workingDir'] ?? $default;
+
+        if (!$subDirectory) {
+            throw new \RuntimeException('You need to pass a workingDir');
+        }
+
+        return $subDirectory;
     }
 }
