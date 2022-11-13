@@ -1,0 +1,7 @@
+{% set blockName = moduleName ~ '_element_' ~ elementName ~ '_preview' %}
+{% set baseClass = moduleName ~ '-el-preview' ~ elementName %}
+{{'{%'}} block {{blockName|u.snake}}  {{'%}'}}
+    <div class="{{baseClass|u.snake|slug}}">
+            Pure Custom Cms Element Preview
+    </div>
+{{'{%'}} endblock {{'%}'}}

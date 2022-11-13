@@ -1,0 +1,5 @@
+{% set baseClass = moduleName ~ '-el-preview' ~ elementName %}
+.{{baseClass|u.snake|slug}} {
+  position: relative;
+  min-height: 100px;
+}

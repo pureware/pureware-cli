@@ -1,0 +1,10 @@
+{% set twigBlockName = 'block_' ~ blockName %}
+{{'{%'}} block {{twigBlockName|u.snake}} {{'%}'}}
+    <div class="cms-element-{{blockName|u.snake|slug}}">
+        {{'{%'}} block element_{{blockName|u.snake}}_inner {{'%}'}}
+            <div class="cms-el-{{blockName|u.snake|slug}}">
+                PURE Custom Block
+            </div>
+        {{'{%'}} endblock {{'%}'}}
+    </div>
+{{'{%'}} endblock {{'%}'}}

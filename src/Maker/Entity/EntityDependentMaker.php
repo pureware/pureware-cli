@@ -49,13 +49,5 @@ class EntityDependentMaker extends AbstractMaker implements MakerInterface
         ];
     }
 
-    protected function getSubDirectory(InputInterface $input, array $options) {
-        $subDirectory = $input->getOption('workingDir') ?? $options['workingDir'];
-        if (!$subDirectory) {
-            throw new \RuntimeException('You need to pass a workingDir');
-        }
-
-        return $subDirectory;
-    }
 
 }

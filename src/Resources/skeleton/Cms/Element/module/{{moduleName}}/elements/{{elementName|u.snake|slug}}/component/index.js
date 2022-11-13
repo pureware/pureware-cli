@@ -1,0 +1,6 @@
+import template from './{{moduleName}}-el-{{elementName|u.snake|slug}}.html.twig';
+import './{{moduleName}}-el-{{elementName|u.snake|slug}}.scss';
+
+Shopware.Component.register('{{moduleName}}-el-{{elementName|u.snake|slug}}', {
+    template
+});

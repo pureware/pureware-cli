@@ -1,0 +1,10 @@
+{% set twigBlockName = moduleName ~ '_element_' ~ blockName ~ '_preview' %}
+{{'{%'}} block {{twigBlockName|u.snake}} {{'%}'}}
+<div class="{{moduleName}}-block-{{blockName|u.snake|slug}}">
+    <div>
+        <h2>PURE Block preview</h2>
+        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</p>
+    </div>
+</div>
+{{'{%'}} endblock {{'%}'}}
+

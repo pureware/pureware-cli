@@ -15,6 +15,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 abstract class AbstractMakeCommand extends Command
 {
+    /**
+     * @return void
+     */
     protected function configure()
     {
         $this
@@ -32,7 +35,7 @@ abstract class AbstractMakeCommand extends Command
             $composerJson = file_get_contents($composerJsonPath);
         }
 
-        if (is_null($composerJson)) {
+        if (is_null($composerJson) || $composerJson === false) {
             throw new \RuntimeException(sprintf('Could not find composer.json in %s. Run the command in plugin directory.', $composerJsonPath));
         }
 
@@ -41,7 +44,7 @@ abstract class AbstractMakeCommand extends Command
         return $pluginNamespaceResolver;
     }
 
-    protected function renderMaker(DirectoryCollection $dirs, InputInterface $input, OutputInterface $output, NamespaceResolverInterface $namespaceResolver) {
+    protected function renderMaker(DirectoryCollection $dirs, InputInterface $input, OutputInterface $output, NamespaceResolverInterface $namespaceResolver): void {
 
         $io = new SymfonyStyle($input, $output);
         $workingPath = $namespaceResolver->getWorkingDir();
@@ -55,18 +58,23 @@ abstract class AbstractMakeCommand extends Command
         }
     }
 
-    protected function renderDir(Directory $directory, SymfonyStyle $io, $depth = 0) {
+    protected function renderDir(Directory $directory, SymfonyStyle $io, int $depth = 0): void {
 
         /** @var File $file */
         foreach ($directory->getFiles() as $file) {
             $this->addFile($io, $file->getParsedFileName(), $depth + 1);
         }
-        foreach ($directory->getDirectories() as $dir) {
+
+        if (!$directory->getDirectories()) {
+            return;
+        }
+
+        foreach ($directory->getDirectories()->getIterator() as $dir) {
             $this->renderDir($dir, $io, $depth + 1);
         }
     }
 
-    protected function addFile(SymfonyStyle $io, string $path, int $depth = 0) {
+    protected function addFile(SymfonyStyle $io, string $path, int $depth = 0): void {
         $space = str_repeat("  ", $depth);
         $io->writeln(sprintf('|%s -- %s', $space, $path));
     }
