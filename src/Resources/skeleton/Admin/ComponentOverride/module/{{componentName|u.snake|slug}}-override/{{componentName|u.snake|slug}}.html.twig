@@ -1,0 +1,6 @@
+{% set name = componentName ~ '-override'  %}
+{{'{%'}} block {{name|u.snake}} {{'%}'}}
+    <div class="{{name|u.snake|slug}}">
+        PURE Component {{name|u.snake|slug}}
+    </div>
+{{'{%'}} endblock {{'%}'}}
