@@ -1,0 +1,3 @@
+{% set name = moduleName ~ '-' ~ componentName  %}
+.{{name|u.snake|slug}} {
+}

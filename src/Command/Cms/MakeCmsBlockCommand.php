@@ -23,7 +23,7 @@ class MakeCmsBlockCommand extends AbstractMakeCommand
             ->setDescription('Create new CMS Block')
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the CMS Block')
             ->addOption('category', 'c',InputOption::VALUE_OPTIONAL, 'Choose one Category for the CMS Block ' . $categories, 'commerce')
-            ->addOption('snippetLanguages', 's',InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Additional migration name', ['de-DE', 'en-EN']);
+            ->addOption('snippetLanguages', 's',InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Additional migration name', ['de-DE', 'en-GB']);
         parent::configure();
     }
 

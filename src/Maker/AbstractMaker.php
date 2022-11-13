@@ -55,7 +55,7 @@ class AbstractMaker implements \Pureware\PurewareCli\Maker\MakerInterface
                     'baseSnippet' => $options['baseSnippet'] ?? ''
                 ]
             );
-            $generator->setForce(false); // do not override snippet files because the share data between different components
+            $generator->setForce(false); // do not override snippet files because the< share data between different components
 
             $directory = (new TreeBuilder())->buildTree($this->getTemplatePath('Cms/Snippet'), $namespaceResolver->getFullNamespace($options['subDirectory']), $options['subDirectory']);
             $collection->add($directory);

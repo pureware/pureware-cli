@@ -10,7 +10,7 @@ interface MakerInterface
     /**
      * @param NamespaceResolverInterface $namespaceResolver
      * @param InputInterface $input
-     * @param array<string> $options
+     * @param array<string|bool> $options
      * @return DirectoryCollection
      */
     public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection;
