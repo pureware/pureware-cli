@@ -2,7 +2,7 @@
 
 namespace Pureware\PurewareCli\Maker\Cms;
 
-use Pureware\PurewareCli\Generator\ContainerConfig\ServiceTagFactory;
+use Pureware\PurewareCli\Generator\ContainerConfig\ServiceFactory;
 use Pureware\PurewareCli\Generator\ContainerConfig\ServiceTagGenerator;
 use Pureware\PurewareCli\Maker\AbstractMaker;
 use Pureware\PurewareCli\Maker\MakerInterface;
@@ -30,7 +30,7 @@ class CmsElementResolverMaker extends AbstractMaker implements MakerInterface
         $generator->generate($directory);
 
         ServiceTagGenerator::instance()->addService(
-            (new ServiceTagFactory())->generateServiceTag($namespaceResolver->getFullNamespace($subDirectory . '/' . $elementName . 'CmsElementResolver'), 'shopware.cms.data_resolver')
+            (new ServiceFactory())->generateServiceTag($namespaceResolver->getFullNamespace($subDirectory . '/' . $elementName . 'CmsElementResolver'), 'shopware.cms.data_resolver')
         );
 
         return (new DirectoryCollection([$directory]));

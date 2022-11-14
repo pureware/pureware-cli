@@ -34,8 +34,6 @@ class ServiceTagGenerator
 
     public function generate(InputInterface $input, OutputInterface $output, NamespaceResolverInterface $namespaceResolver): void
     {
-        $services = $this->services;
-
         $path = $namespaceResolver->getWorkingDir('Resources/Config/services.xml');
         // @todo output message that trying to add service tag in this file
 
