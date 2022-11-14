@@ -67,7 +67,7 @@ class AbstractMaker implements \Pureware\PurewareCli\Maker\MakerInterface
 
     /**
      * @param InputInterface $input
-     * @param array<string> $options
+     * @param array<string|bool> $options
      * @param string|null $default
      * @return string
      */

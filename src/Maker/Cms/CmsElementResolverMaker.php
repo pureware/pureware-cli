@@ -2,6 +2,8 @@
 
 namespace Pureware\PurewareCli\Maker\Cms;
 
+use Pureware\PurewareCli\Generator\ContainerConfig\ServiceTagFactory;
+use Pureware\PurewareCli\Generator\ContainerConfig\ServiceTagGenerator;
 use Pureware\PurewareCli\Maker\AbstractMaker;
 use Pureware\PurewareCli\Maker\MakerInterface;
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
@@ -15,18 +17,21 @@ class CmsElementResolverMaker extends AbstractMaker implements MakerInterface
 {
     public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection {
         $subDirectory = $this->getSubDirectory($input, $options, 'DataResolver');
+        $elementName = $input->getArgument('name') ?? $options['elementName'];
 
         $generator = $this->getDirectoryGenerator($namespaceResolver, $input, $subDirectory);
         $generator->getParser()->setTemplateData(
             [
-                'elementName' => $input->getArgument('name') ?? $options['elementName']
+                'elementName' => $elementName
             ]
         );
 
         $directory = (new TreeBuilder())->buildTree($this->getTemplatePath('Cms/Resolver'), $namespaceResolver->getFullNamespace($subDirectory), $subDirectory);
         $generator->generate($directory);
 
-        $this->addServiceTag($namespaceResolver);
+        ServiceTagGenerator::instance()->addService(
+            (new ServiceTagFactory())->generateServiceTag($namespaceResolver->getFullNamespace($subDirectory . '/' . $elementName . 'CmsElementResolver'), 'shopware.cms.data_resolver')
+        );
 
         return (new DirectoryCollection([$directory]));
     }
