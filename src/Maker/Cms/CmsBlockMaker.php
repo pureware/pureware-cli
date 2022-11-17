@@ -72,7 +72,7 @@ class CmsBlockMaker extends AbstractMaker implements MakerInterface
     protected function makeStorefrontElementFile(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
     {
 
-        if (!$options['blockName']) {
+        if ($options['blockName'] === '' || $options['blockName'] === '0') {
             throw new \RuntimeException('You need to pass a blockName to create storefront file');
         }
 

@@ -26,11 +26,6 @@ class RunPhpUnitCommand extends \Pureware\PurewareCli\Command\AbstractMakeComman
 {
     protected static $defaultName = 'test:phpunit';
 
-    public function __construct(string $name = null)
-    {
-        parent::__construct($name);
-    }
-
     protected function configure()
     {
         $this

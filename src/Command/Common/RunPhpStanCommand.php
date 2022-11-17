@@ -26,11 +26,6 @@ class RunPhpStanCommand extends \Pureware\PurewareCli\Command\AbstractMakeComman
 {
     protected static $defaultName = 'phpstan';
 
-    public function __construct(string $name = null)
-    {
-        parent::__construct($name);
-    }
-
     protected function configure()
     {
         $this

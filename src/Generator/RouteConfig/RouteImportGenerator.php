@@ -19,7 +19,6 @@ class RouteImportGenerator
     private array $routes = [];
 
     protected function __construct() {}
-    protected function __clone() {}
 
     public function __wakeup()
     {
@@ -42,7 +41,7 @@ class RouteImportGenerator
         }
         $path = $namespaceResolver->getWorkingDir('Resources/Config/routes.xml');
 
-        if (false === file_exists($path)) {
+        if (!file_exists($path)) {
             $this->createRoutesFile($namespaceResolver);
         }
 

@@ -16,7 +16,6 @@ class ServiceTagGenerator
     private array $services = [];
 
     protected function __construct() {}
-    protected function __clone() {}
 
     public function __wakeup()
     {
@@ -37,7 +36,7 @@ class ServiceTagGenerator
         $path = $namespaceResolver->getWorkingDir('Resources/Config/services.xml');
         // @todo output message that trying to add service tag in this file
 
-        if (false === file_exists($path)) {
+        if (!file_exists($path)) {
             return;
         }
 

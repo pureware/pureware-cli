@@ -37,7 +37,7 @@ class PluginGenerator implements GeneratorInterface
 
         $this->shopwareVersion = $input->getOption('shopwareVersion') ?? $this->getLatestShopwareVersion();
         $dockwareVersion = $this->getDockwareVersion($input->getOption('shopwareVersion'));
-        if (version_compare($this->shopwareVersion, $dockwareVersion, '==') === false) {
+        if (!version_compare($this->shopwareVersion, $dockwareVersion, '==')) {
             $io->warning(sprintf('Could not match the dockware version for shopware v%s. Latest dockware is %s', $this->shopwareVersion, $dockwareVersion));
             if ($io->askQuestion(new ConfirmationQuestion('Do you want to choose a dockware and shopware version manually'))) {
                 $dockwareVersion = $io->ask('Input a dockware and shopware version', $dockwareVersion);
@@ -45,7 +45,7 @@ class PluginGenerator implements GeneratorInterface
             }
         }
 
-        if (version_compare($this->shopwareVersion, '6', '>=') === false) {
+        if (!version_compare($this->shopwareVersion, '6', '>=')) {
             throw new \RuntimeException('The Plugin Generator only works for shopware 6');
         }
 
@@ -188,7 +188,6 @@ class PluginGenerator implements GeneratorInterface
 
     /**
      * @param string|null $inputShopwareVersion | if version is not set or not found the latest version tag is returned
-     * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function getDockwareVersion(?string $inputShopwareVersion = null): string

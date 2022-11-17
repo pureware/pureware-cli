@@ -25,11 +25,6 @@ class MakeEntityCommand extends \Pureware\PurewareCli\Command\AbstractMakeComman
 {
     protected static $defaultName = 'make:entity';
 
-    public function __construct(string $name = null)
-    {
-        parent::__construct($name);
-    }
-
     protected function configure()
     {
         $this

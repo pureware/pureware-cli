@@ -84,7 +84,7 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
     protected function makeStorefrontElementFile(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
     {
 
-        if (!$options['elementName']) {
+        if ($options['elementName'] === '' || $options['elementName'] === '0') {
             throw new \RuntimeException('You need to pass a elementName to create storefront file');
         }
 

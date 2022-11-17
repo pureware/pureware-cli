@@ -65,7 +65,7 @@ abstract class AbstractMakeCommand extends Command
             $this->addFile($io, $file->getParsedFileName(), $depth + 1);
         }
 
-        if (!$directory->getDirectories()) {
+        if ($directory->getDirectories() === null) {
             return;
         }
 

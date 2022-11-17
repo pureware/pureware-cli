@@ -10,8 +10,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class NewPluginCommand extends Command
 {
-    private array $allowedTypes = ['plugin', 'project'];
-
     protected function configure()
     {
         $this
@@ -39,7 +37,5 @@ class NewPluginCommand extends Command
         $output->writeln('Pure installer');
 
         return (new PluginGenerator())->generate($input, $output);
-
-        return self::SUCCESS;
     }
 }

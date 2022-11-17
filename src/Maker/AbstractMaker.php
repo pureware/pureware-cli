@@ -36,11 +36,11 @@ class AbstractMaker implements \Pureware\PurewareCli\Maker\MakerInterface
      */
     protected function makeSnippetFiles(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
     {
-        if (!$options['subDirectory']) {
+        if ($options['subDirectory'] === '' || $options['subDirectory'] === '0') {
             throw new \RuntimeException('You need to pass a subDirectory to create snippet files');
         }
 
-        if (!$options['moduleName']) {
+        if ($options['moduleName'] === '' || $options['moduleName'] === '0') {
             throw new \RuntimeException('You need to pass a moduleName to create snippet files');
         }
 
@@ -66,10 +66,7 @@ class AbstractMaker implements \Pureware\PurewareCli\Maker\MakerInterface
     }
 
     /**
-     * @param InputInterface $input
      * @param array<string|bool> $options
-     * @param string|null $default
-     * @return string
      */
     protected function getSubDirectory(InputInterface $input, array $options, ?string $default = null): string {
         $subDirectory = $input->getOption('workingDir') ?? $options['workingDir'] ?? $default;
