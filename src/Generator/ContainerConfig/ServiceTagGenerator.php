@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Generator\ContainerConfig;
 
@@ -9,13 +11,16 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ServiceTagGenerator
 {
-
     private static ServiceTagGenerator $instance;
 
-    /** @var array<ServiceInterface>  */
+    /**
+     * @var array<ServiceInterface>
+     */
     private array $services = [];
 
-    protected function __construct() {}
+    protected function __construct()
+    {
+    }
 
     public function __wakeup()
     {
@@ -24,7 +29,7 @@ class ServiceTagGenerator
 
     public static function instance(): ServiceTagGenerator
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             self::$instance = new ServiceTagGenerator();
         }
 
@@ -36,7 +41,7 @@ class ServiceTagGenerator
         $path = $namespaceResolver->getWorkingDir('Resources/Config/services.xml');
         // @todo output message that trying to add service tag in this file
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             return;
         }
 
@@ -62,13 +67,12 @@ class ServiceTagGenerator
 
         $fileSystem = new Filesystem();
         $fileSystem->dumpFile($path, $servicesFile); //@todo catch error
-
     }
 
-    public function addService(ServiceInterface $service): self {
+    public function addService(ServiceInterface $service): self
+    {
         $this->services[] = $service;
 
         return $this;
     }
-
 }

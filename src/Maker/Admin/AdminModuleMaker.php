@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Maker\Admin;
 
@@ -13,8 +15,8 @@ use Symfony\Component\String\UnicodeString;
 
 class AdminModuleMaker extends AbstractMaker implements MakerInterface
 {
-
-    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection {
+    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
+    {
         $subDirectory = 'Resources/app/administration/src';
         $moduleName = $input->getArgument('name');
         $prefixedModuleName = $input->getOption('prefix') ? $input->getOption('prefix') . '-' . $input->getArgument('name') : $input->getArgument('name');
@@ -29,7 +31,7 @@ class AdminModuleMaker extends AbstractMaker implements MakerInterface
                 'moduleColor' => $input->getOption('moduleColor'),
                 'navigationParent' => $input->getOption('navigationParent'),
                 'mainJsContent' => $this->getMainJsContent($namespaceResolver),
-                'snippetLanguages' => $input->getOption('snippetLanguages')
+                'snippetLanguages' => $input->getOption('snippetLanguages'),
             ]
         );
 
@@ -42,41 +44,42 @@ class AdminModuleMaker extends AbstractMaker implements MakerInterface
             'moduleName' => $prefixedModuleName,
             'componentName' => $prefixedModuleName . '-list',
             'componentsOnly' => true,
-            'workingDir' => $workingDir
+            'workingDir' => $workingDir,
         ]);
 
         $detailPage = (new AdminComponentMaker())->make($namespaceResolver, $input, [
             'moduleName' => $prefixedModuleName,
             'componentName' => $prefixedModuleName . '-detail',
             'componentsOnly' => true,
-            'workingDir' => $workingDir
+            'workingDir' => $workingDir,
         ]);
 
         $createPage = (new AdminComponentMaker())->make($namespaceResolver, $input, [
             'moduleName' => $prefixedModuleName,
             'componentName' => $prefixedModuleName . '-create',
             'componentsOnly' => true,
-            'workingDir' => $workingDir
+            'workingDir' => $workingDir,
         ]);
 
         $snippetData = [
             $prefixedModuleName => [
                 'general' => [
-                    'mainMenuItemGeneral' => 'PURE Menu Item'
-                ]
-            ]
+                    'mainMenuItemGeneral' => 'PURE Menu Item',
+                ],
+            ],
         ];
 
         $snippets = $this->makeSnippetFiles($namespaceResolver, $input, [
             'subDirectory' => $subDirectory . '/module/',
             'moduleName' => $prefixedModuleName,
-            'baseSnippet' => json_encode($snippetData, JSON_PRETTY_PRINT) ?: ''
+            'baseSnippet' => json_encode($snippetData, JSON_PRETTY_PRINT) ?: '',
         ]);
 
         return (new DirectoryCollection([$directory]))->merge($listPage)->merge($detailPage)->merge($createPage)->merge($snippets);
     }
 
-    protected function getMainJsContent(NamespaceResolverInterface $namespaceResolver): string {
+    protected function getMainJsContent(NamespaceResolverInterface $namespaceResolver): string
+    {
         $content = '';
 
         if (file_exists($namespaceResolver->getWorkingDir('Resources/app/administration/src/main.js'))) {
@@ -85,5 +88,4 @@ class AdminModuleMaker extends AbstractMaker implements MakerInterface
 
         return is_string($content) ? $content : '';
     }
-
 }

@@ -32,21 +32,20 @@ class RunPhpUnitCommand extends \Pureware\PurewareCli\Command\AbstractMakeComman
             ->setName(self::$defaultName)
             ->setDescription('Run PHP Unit inside the docker container')
             ->addArgument('pluginName', InputArgument::OPTIONAL, 'The name of the plugin you want to test. (optional, default will be the current plugin)', null)
-            ->addOption('container', 'c', InputOption::VALUE_OPTIONAL , 'The docker container name', 'shop_plugin')
-            ->addOption('options', null, InputOption::VALUE_OPTIONAL  , 'The options that are added to the phpunit command as string i.e.  --options="--testdox"', '--colors=always --testdox');
+            ->addOption('container', 'c', InputOption::VALUE_OPTIONAL, 'The docker container name', 'shop_plugin')
+            ->addOption('options', null, InputOption::VALUE_OPTIONAL, 'The options that are added to the phpunit command as string i.e.  --options="--testdox"', '--colors=always --testdox');
         parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
         $pluginName = $input->getArgument('pluginName');
-        if (!$input->getArgument('pluginName')) {
+        if (! $input->getArgument('pluginName')) {
             $resolver = $this->getNamespaceResolver();
             $pluginName = $resolver->getPluginName();
         }
 
-        $command = sprintf('docker exec %s vendor/bin/phpunit --configuration="%s" %s', $input->getOption('container'),  'custom/plugins/' . $pluginName, $input->getOption('options'));
+        $command = sprintf('docker exec %s vendor/bin/phpunit --configuration="%s" %s', $input->getOption('container'), 'custom/plugins/' . $pluginName, $input->getOption('options'));
 
         $cli = Process::fromShellCommandline($command, null, null, null, 240);
         $cli->setTty(true);
@@ -55,9 +54,6 @@ class RunPhpUnitCommand extends \Pureware\PurewareCli\Command\AbstractMakeComman
             $output->write($line);
         });
 
-
-
         return Command::SUCCESS;
     }
-
 }

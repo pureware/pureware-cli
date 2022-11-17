@@ -19,10 +19,15 @@ use Symfony\Component\String\UnicodeString;
 class PluginGenerator implements GeneratorInterface
 {
     public const DEFAULT_VERSION = '6.4.15.0';
+
     private ?string $pluginName = null;
+
     private ?string $workingDir = null;
+
     private string $namespace;
+
     private string $composerName;
+
     private string $shopwareVersion;
 
     public function generate(Input $input, Output $output): int
@@ -31,13 +36,13 @@ class PluginGenerator implements GeneratorInterface
 
         $io = new SymfonyStyle($input, $output);
         $io->progressStart(4);
-        if (!$this->pluginName) {
+        if (! $this->pluginName) {
             $this->pluginName = $io->ask('Name of the plugin');
         }
 
         $this->shopwareVersion = $input->getOption('shopwareVersion') ?? $this->getLatestShopwareVersion();
         $dockwareVersion = $this->getDockwareVersion($input->getOption('shopwareVersion'));
-        if (!version_compare($this->shopwareVersion, $dockwareVersion, '==')) {
+        if (! version_compare($this->shopwareVersion, $dockwareVersion, '==')) {
             $io->warning(sprintf('Could not match the dockware version for shopware v%s. Latest dockware is %s', $this->shopwareVersion, $dockwareVersion));
             if ($io->askQuestion(new ConfirmationQuestion('Do you want to choose a dockware and shopware version manually'))) {
                 $dockwareVersion = $io->ask('Input a dockware and shopware version', $dockwareVersion);
@@ -45,7 +50,7 @@ class PluginGenerator implements GeneratorInterface
             }
         }
 
-        if (!version_compare($this->shopwareVersion, '6', '>=')) {
+        if (! version_compare($this->shopwareVersion, '6', '>=')) {
             throw new \RuntimeException('The Plugin Generator only works for shopware 6');
         }
 
@@ -68,9 +73,9 @@ class PluginGenerator implements GeneratorInterface
                 'composerDescriptionDe' => $this->pluginName,
                 'phpVersion' => version_compare('6.5', $this->shopwareVersion) > 0 ? '^7.4.3 || ^8.0' : '^8.0',
                 'dockwarePhpVersion' => version_compare('6.5', $this->shopwareVersion) > 0 ? '7.4' : '8.0',
-                'shopwareVersion' =>  '~' . pathinfo( $this->shopwareVersion, PATHINFO_FILENAME),
+                'shopwareVersion' => '~' . pathinfo($this->shopwareVersion, PATHINFO_FILENAME),
                 'dockwareVersion' => $dockwareVersion,
-                'containerName' => 'shop_plugin'
+                'containerName' => 'shop_plugin',
             ]
         );
         $io->progressAdvance(1);
@@ -88,9 +93,8 @@ class PluginGenerator implements GeneratorInterface
         $commands = [
             $this->findComposer() . ' install --working-dir=' . $pluginPath,
             $this->findComposer() . ' require --dev phpstan/phpstan phpunit/phpunit --working-dir=' . $pluginPath,
-            sprintf('echo "%s"'
-                , 'PURE installed composer dependencies'),
-            sprintf('ls -la %s', $pluginPath)
+            sprintf('echo "%s"', 'PURE installed composer dependencies'),
+            sprintf('ls -la %s', $pluginPath),
         ];
 
         $this->executeCommands($commands, $output);
@@ -100,7 +104,7 @@ class PluginGenerator implements GeneratorInterface
         $messages = [
             '',
             sprintf(' ✓ %s %s: %s', $this->pluginName, 'Plugin created. Change directory', str_replace($_SERVER['HOME'], '~', $pluginPath)),
-            '✓ Installed composer dependencies'
+            '✓ Installed composer dependencies',
         ];
 
         if ($input->getOption('git')) {
@@ -111,11 +115,10 @@ class PluginGenerator implements GeneratorInterface
         $io->success($messages);
 
         return Command::SUCCESS;
-
     }
 
-    public function resolveNamespace(): void {
-
+    public function resolveNamespace(): void
+    {
         $snakeCase = (new UnicodeString($this->pluginName))->camel()->title()->snake();
         $strings = explode('_', $snakeCase);
         if (count($strings) < 2) {
@@ -135,13 +138,14 @@ class PluginGenerator implements GeneratorInterface
         $composerPath = getcwd() . '/composer.phar';
 
         if (file_exists($composerPath)) {
-            return '"'.PHP_BINARY.'" '.$composerPath;
+            return '"' . PHP_BINARY . '" ' . $composerPath;
         }
 
         return 'composer';
     }
 
-    private function initGit(OutputInterface $output, string $branch): void {
+    private function initGit(OutputInterface $output, string $branch): void
+    {
         if (file_exists($this->workingDir . DIRECTORY_SEPARATOR . $this->pluginName . DIRECTORY_SEPARATOR . '.git')) {
             $output->write('Git already exists. Skipping.');
             return;
@@ -170,19 +174,18 @@ class PluginGenerator implements GeneratorInterface
         return $cli;
     }
 
-    protected function getLatestShopwareVersion(): string {
-
+    protected function getLatestShopwareVersion(): string
+    {
         try {
             $client = new \GuzzleHttp\Client();
             $get = $client->get('https://api.github.com/repos/shopware/platform/releases/latest', [
-                'content-type' => 'application/json'
+                'content-type' => 'application/json',
             ]);
             $content = $get->getBody()->getContents();
             $json = json_decode($content, true);
             return str_replace('v', '', $json['tag_name']);
-
         } catch (\Exception $exception) {
-           return self::DEFAULT_VERSION;
+            return self::DEFAULT_VERSION;
         }
     }
 
@@ -192,16 +195,15 @@ class PluginGenerator implements GeneratorInterface
      */
     private function getDockwareVersion(?string $inputShopwareVersion = null): string
     {
-
         $client = new \GuzzleHttp\Client();
         $url = 'https://hub.docker.com/v2/repositories/dockware/dev/tags/?page_size=1&page=1';
 
-        if (!is_null($inputShopwareVersion)) {
-            $url  .= '&name=' . $inputShopwareVersion;
+        if (! is_null($inputShopwareVersion)) {
+            $url .= '&name=' . $inputShopwareVersion;
         }
 
         $get = $client->get($url, [
-            'content-type' => 'application/json'
+            'content-type' => 'application/json',
         ]);
         $content = $get->getBody()->getContents();
         $json = json_decode($content, true);

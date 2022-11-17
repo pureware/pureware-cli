@@ -8,13 +8,15 @@ class Route implements ServiceInterface
 {
     protected string $route = '';
 
-    public function getTemplate(): string {
+    public function getTemplate(): string
+    {
         $template = '<import resource="%s" type="annotation" />';
 
         return sprintf($template, $this->route);
     }
 
-    public function getIdentifier(): string {
+    public function getIdentifier(): string
+    {
         return $this->getTemplate();
     }
 

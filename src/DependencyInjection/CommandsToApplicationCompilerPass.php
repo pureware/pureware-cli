@@ -1,4 +1,5 @@
 <?php
+
 namespace Pureware\PurewareCli\DependencyInjection;
 
 use Symfony\Component\Console\Application;

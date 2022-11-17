@@ -4,7 +4,6 @@ namespace Pureware\PurewareCli\Resolver;
 
 class PluginNamespaceResolver implements NamespaceResolverInterface
 {
-
     protected string $pluginBaseNamespace;
 
     protected string $pluginSrcPath;
@@ -41,7 +40,7 @@ class PluginNamespaceResolver implements NamespaceResolverInterface
 
     public function getFullNamespace(?string $additional = null): string
     {
-        if (!$additional) {
+        if (! $additional) {
             return $this->getPluginBaseNamespace();
         }
 
@@ -53,13 +52,12 @@ class PluginNamespaceResolver implements NamespaceResolverInterface
 
     public function isNamespace(string $path): bool
     {
-      return true;
+        return true;
     }
-
 
     public function getWorkingDir(?string $additional = null): string
     {
-        if (!$additional) {
+        if (! $additional) {
             return $this->getPluginSrcPath();
         }
 

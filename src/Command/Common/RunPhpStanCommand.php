@@ -48,5 +48,4 @@ class RunPhpStanCommand extends \Pureware\PurewareCli\Command\AbstractMakeComman
 
         return Command::SUCCESS;
     }
-
 }

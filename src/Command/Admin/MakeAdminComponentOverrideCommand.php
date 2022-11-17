@@ -13,7 +13,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MakeAdminComponentOverrideCommand extends AbstractMakeCommand
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:admin-component-override';
 
     protected function configure(): void

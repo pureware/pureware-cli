@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Maker\Admin;
 
@@ -11,14 +13,14 @@ use Symfony\Component\Console\Input\InputInterface;
 
 class AdminComponentMaker extends AbstractMaker implements MakerInterface
 {
-
-    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection {
+    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
+    {
         $subDirectory = $input->getOption('workingDir') ?? $options['workingDir'] ?? 'Resources/app/administration/src';
 
         $componentName = $options['componentName'] ?? $input->getArgument('name');
         $moduleName = $options['moduleName'] ?? $input->getOption('module');
 
-        if (!$componentName || !$moduleName) {
+        if (! $componentName || ! $moduleName) {
             throw new \RuntimeException('You need a componentName and a moduleName to create a component.');
         }
 
@@ -27,7 +29,7 @@ class AdminComponentMaker extends AbstractMaker implements MakerInterface
             [
                 'moduleName' => $moduleName,
                 'componentName' => $componentName,
-                'mainJsContent' => $this->getMainJsContent($namespaceResolver)
+                'mainJsContent' => $this->getMainJsContent($namespaceResolver),
             ]
         );
 
@@ -42,7 +44,8 @@ class AdminComponentMaker extends AbstractMaker implements MakerInterface
         return (new DirectoryCollection([$directory]));
     }
 
-    protected function getMainJsContent(NamespaceResolverInterface $namespaceResolver): string {
+    protected function getMainJsContent(NamespaceResolverInterface $namespaceResolver): string
+    {
         $content = '';
 
         if (file_exists($namespaceResolver->getWorkingDir('Resources/app/administration/src/main.js'))) {
@@ -51,5 +54,4 @@ class AdminComponentMaker extends AbstractMaker implements MakerInterface
 
         return is_string($content) ? $content : '';
     }
-
 }

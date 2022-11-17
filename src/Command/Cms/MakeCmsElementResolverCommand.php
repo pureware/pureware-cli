@@ -11,7 +11,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MakeCmsElementResolverCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:cms-resolver';
 
     protected function configure(): void

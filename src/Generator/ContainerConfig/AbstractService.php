@@ -5,7 +5,9 @@ namespace Pureware\PurewareCli\Generator\ContainerConfig;
 abstract class AbstractService implements ServiceInterface
 {
     protected string $xmlNode = 'service';
+
     protected string $serviceId = '';
+
     protected string $tag = '';
 
     public function setXmlNode(string $xmlNode): ServiceInterface

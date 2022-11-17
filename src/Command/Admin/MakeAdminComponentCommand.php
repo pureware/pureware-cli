@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Command\Admin;
 
@@ -12,7 +14,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MakeAdminComponentCommand extends AbstractMakeCommand
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:admin-component';
 
     protected function configure(): void
@@ -21,7 +25,7 @@ class MakeAdminComponentCommand extends AbstractMakeCommand
             ->setName(self::$defaultName)
             ->setDescription('Create new component for a given Admin Module')
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the Admin Component in PascalCase or camelCase')
-            ->addOption('module', 'm',InputOption::VALUE_REQUIRED, 'Name of a given module like sw-cms', null);
+            ->addOption('module', 'm', InputOption::VALUE_REQUIRED, 'Name of a given module like sw-cms', null);
         parent::configure();
     }
 

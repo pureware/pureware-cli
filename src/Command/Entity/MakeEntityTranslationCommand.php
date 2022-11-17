@@ -42,25 +42,27 @@ class MakeEntityTranslationCommand extends \Pureware\PurewareCli\Command\Abstrac
             'parentClass' => $namespaceResolver->getFullNamespace($input->getArgument('parentEntity')),
             'entityName' => $this->resolveEntityName($input, $namespaceResolver),
             'workingDir' => $this->resolveWorkingDir($input, $namespaceResolver),
-            'entityPrefix' => $input->getOption('prefix')
+            'entityPrefix' => $input->getOption('prefix'),
         ]);
         $this->renderMaker($dirs, $input, $output, $namespaceResolver);
 
         return Command::SUCCESS;
     }
 
-    protected function resolveEntityName(InputInterface $input, NamespaceResolverInterface $namespaceResolver): string {
+    protected function resolveEntityName(InputInterface $input, NamespaceResolverInterface $namespaceResolver): string
+    {
         $path = $namespaceResolver->getWorkingDir($input->getArgument('parentEntity'));
         return basename($path);
     }
 
-    protected function resolveWorkingDir(InputInterface $input, NamespaceResolverInterface $namespaceResolver): string {
+    protected function resolveWorkingDir(InputInterface $input, NamespaceResolverInterface $namespaceResolver): string
+    {
         if ($input->getOption('workingDir')) {
             return $namespaceResolver->getWorkingDir($input->getOption('workingDir'));
         }
 
         $inputEntity = str_replace('\\', '/', $input->getArgument('parentEntity'));
-        $directory = explode( '/', $inputEntity);
+        $directory = explode('/', $inputEntity);
         array_pop($directory);
         $entityDirectory = implode('/', $directory);
 
@@ -70,5 +72,4 @@ class MakeEntityTranslationCommand extends \Pureware\PurewareCli\Command\Abstrac
 
         return $entityDirectory;
     }
-
 }

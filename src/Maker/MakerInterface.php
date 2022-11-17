@@ -1,4 +1,5 @@
 <?php
+
 namespace Pureware\PurewareCli\Maker;
 
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;

@@ -12,7 +12,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MakeCmsBlockCommand extends AbstractMakeCommand
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:cms-block';
 
     protected function configure(): void
@@ -22,8 +24,8 @@ class MakeCmsBlockCommand extends AbstractMakeCommand
             ->setName(self::$defaultName)
             ->setDescription('Create new CMS Block')
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the CMS Block')
-            ->addOption('category', 'c',InputOption::VALUE_OPTIONAL, 'Choose one Category for the CMS Block ' . $categories, 'commerce')
-            ->addOption('snippetLanguages', 's',InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Additional migration name', ['de-DE', 'en-GB']);
+            ->addOption('category', 'c', InputOption::VALUE_OPTIONAL, 'Choose one Category for the CMS Block ' . $categories, 'commerce')
+            ->addOption('snippetLanguages', 's', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Additional migration name', ['de-DE', 'en-GB']);
         parent::configure();
     }
 

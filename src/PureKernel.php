@@ -1,10 +1,11 @@
 <?php
+
 namespace Pureware\PurewareCli;
 
 use Pureware\PurewareCli\DependencyInjection\CommandsToApplicationCompilerPass;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Kernel;
 
 final class PureKernel extends Kernel
 {
@@ -20,7 +21,6 @@ final class PureKernel extends Kernel
     {
         $containerBuilder->addCompilerPass(new CommandsToApplicationCompilerPass());
     }
-
 
     /**
      * Load all services

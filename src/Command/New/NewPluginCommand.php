@@ -1,4 +1,5 @@
 <?php
+
 namespace Pureware\PurewareCli\Command\New;
 
 use Pureware\PurewareCli\Generator\Plugin\PluginGenerator;
@@ -26,13 +27,13 @@ class NewPluginCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln(PHP_EOL."<fg=blue>
+        $output->writeln(PHP_EOL . "<fg=blue>
  _____  _    _ _____  ______ 
 |  __ \| |  | |  __ \|  ____|
 | |__) | |  | | |__) | |__   
 |  ___/| |  | |  _  /|  __|  
 | |    | |__| | | \ \| |____ 
-|_|     \____/|_|  \_\______| </>".PHP_EOL.PHP_EOL);
+|_|     \____/|_|  \_\______| </>" . PHP_EOL . PHP_EOL);
 
         $output->writeln('Pure installer');
 

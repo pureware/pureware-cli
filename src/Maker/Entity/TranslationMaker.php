@@ -10,9 +10,8 @@ use Symfony\Component\Console\Input\InputInterface;
 
 class TranslationMaker extends EntityDependentMaker implements MakerInterface
 {
-
-    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection {
-
+    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
+    {
         $subDirectory = $this->getSubDirectory($input, $options);
         $generator = $this->getDirectoryGenerator($namespaceResolver, $input, $subDirectory);
 
@@ -20,7 +19,7 @@ class TranslationMaker extends EntityDependentMaker implements MakerInterface
             [
                 'entityName' => $options['entityName'] ?? $input->getOption('entityName'),
                 'entityPrefix' => $options['entityPrefix'] ?? $input->getOption('prefix'),
-                'parentClassNamespace' => $this->resolveParentClassNamespace($namespaceResolver, $input, $options)
+                'parentClassNamespace' => $this->resolveParentClassNamespace($namespaceResolver, $input, $options),
             ]
         );
 
@@ -30,12 +29,12 @@ class TranslationMaker extends EntityDependentMaker implements MakerInterface
         return new DirectoryCollection([$hydratorDirectory]);
     }
 
-    private function resolveParentClassNamespace(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options): string {
+    private function resolveParentClassNamespace(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options): string
+    {
         if ($input->hasOption('parentClass') && $input->getOption('parentClass')) {
             return $namespaceResolver->getFullNamespace($input->getOption('parentClass'));
         } else {
             return $options['parentClass'] ?? throw new \RuntimeException('You need to pass a parentClass definition. e.g. Content/EntityName/EntityNameDefinition');
         }
     }
-
 }

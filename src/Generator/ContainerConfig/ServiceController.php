@@ -4,7 +4,8 @@ namespace Pureware\PurewareCli\Generator\ContainerConfig;
 
 class ServiceController extends AbstractService implements ServiceInterface
 {
-    public function getTemplate(): string {
+    public function getTemplate(): string
+    {
         $template = '
         <%s id="%s" public="true">
             <call method="setContainer">
@@ -15,7 +16,8 @@ class ServiceController extends AbstractService implements ServiceInterface
         return sprintf($template, $this->xmlNode, $this->serviceId, $this->xmlNode);
     }
 
-    public function getIdentifier(): string {
+    public function getIdentifier(): string
+    {
         return sprintf('<%s id="%s"', $this->xmlNode, $this->serviceId);
     }
 }

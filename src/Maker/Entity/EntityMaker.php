@@ -1,4 +1,5 @@
 <?php
+
 namespace Pureware\PurewareCli\Maker\Entity;
 
 use Pureware\PurewareCli\Maker\AbstractMaker;
@@ -11,13 +12,14 @@ use Shopware\Core\Content\Category\Tree\Tree;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\String\UnicodeString;
 
-
 class EntityMaker extends AbstractMaker implements MakerInterface
 {
-
     private MakerInterface $migrationMaker;
+
     private MakerInterface $hydratorMaker;
+
     private MakerInterface $many2manyMaker;
+
     private MakerInterface $translationMaker;
 
     public function __construct(
@@ -26,7 +28,6 @@ class EntityMaker extends AbstractMaker implements MakerInterface
         MakerInterface $many2manyMaker,
         MakerInterface $translationMaker
     ) {
-
         $this->migrationMaker = $migrationMaker;
         $this->hydratorMaker = $hydratorMaker;
         $this->many2manyMaker = $many2manyMaker;
@@ -39,10 +40,10 @@ class EntityMaker extends AbstractMaker implements MakerInterface
         $skiPaths = [
             '{{entityName|u.camel.title}}Hydrator.php',
             '{{entityName|u.camel.title}}MappingDefinition.php',
-            'Aggregate'
+            'Aggregate',
         ];
         $subDirPath = $input->getOption('workingDir') ?? 'Content' . DIRECTORY_SEPARATOR . $entityName;
-        $generator = $this->getDirectoryGenerator($namespaceResolver, $input,  $subDirPath);
+        $generator = $this->getDirectoryGenerator($namespaceResolver, $input, $subDirPath);
         $parser = $generator->getParser();
         $treeBuilder = new TreeBuilder();
 
@@ -50,7 +51,7 @@ class EntityMaker extends AbstractMaker implements MakerInterface
             [
                 'entityName' => $entityName,
                 'entityPrefix' => $input->getOption('prefix'),
-                'hasTranslation' => (bool) $input->getOption('translation')
+                'hasTranslation' => (bool) $input->getOption('translation'),
             ]
         );
 
@@ -68,18 +69,20 @@ class EntityMaker extends AbstractMaker implements MakerInterface
                 'entityName' => $entityName,
                 'entityPrefix' => $input->getOption('prefix'),
                 'workingDir' => $subDirPath . DIRECTORY_SEPARATOR . 'Aggregate' . DIRECTORY_SEPARATOR . 'Translation',
-                'parentClass' =>  $namespaceResolver->getFullNamespace($subDirPath . DIRECTORY_SEPARATOR . $entityName)
+                'parentClass' => $namespaceResolver->getFullNamespace($subDirPath . DIRECTORY_SEPARATOR . $entityName),
             ], $options)));
         }
 
         if ($input->getOption('migration')) {
-            $createdDirectories = $createdDirectories->merge($this->migrationMaker->make($namespaceResolver, $input, array_merge(['suffix' => $entityName], $options)));
+            $createdDirectories = $createdDirectories->merge($this->migrationMaker->make($namespaceResolver, $input, array_merge([
+                'suffix' => $entityName,
+            ], $options)));
         }
 
         if ($input->getOption('hydrator')) {
             $createdDirectories = $createdDirectories->merge($this->hydratorMaker->make($namespaceResolver, $input, array_merge([
                 'entityName' => $entityName,
-                'workingDir' => $subDirPath
+                'workingDir' => $subDirPath,
             ], $options)));
         }
 
@@ -87,7 +90,7 @@ class EntityMaker extends AbstractMaker implements MakerInterface
             $createdDirectories = $createdDirectories->merge($this->many2manyMaker->make($namespaceResolver, $input, array_merge([
                 'entityName' => $entityName,
                 'entityPrefix' => $input->getOption('prefix'),
-                'workingDir' => $subDirPath
+                'workingDir' => $subDirPath,
             ], $options)));
         }
 

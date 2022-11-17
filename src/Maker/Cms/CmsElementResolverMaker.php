@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Maker\Cms;
 
@@ -15,14 +17,15 @@ use Symfony\Component\String\UnicodeString;
 
 class CmsElementResolverMaker extends AbstractMaker implements MakerInterface
 {
-    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection {
+    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
+    {
         $subDirectory = $this->getSubDirectory($input, $options, 'DataResolver');
         $elementName = $input->getArgument('name') ?? $options['elementName'];
 
         $generator = $this->getDirectoryGenerator($namespaceResolver, $input, $subDirectory);
         $generator->getParser()->setTemplateData(
             [
-                'elementName' => $elementName
+                'elementName' => $elementName,
             ]
         );
 
@@ -35,5 +38,4 @@ class CmsElementResolverMaker extends AbstractMaker implements MakerInterface
 
         return (new DirectoryCollection([$directory]));
     }
-
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Generator\RouteConfig;
 
@@ -15,10 +17,14 @@ class RouteImportGenerator
 {
     private static RouteImportGenerator $instance;
 
-    /** @var array<ServiceInterface>  */
+    /**
+     * @var array<ServiceInterface>
+     */
     private array $routes = [];
 
-    protected function __construct() {}
+    protected function __construct()
+    {
+    }
 
     public function __wakeup()
     {
@@ -27,7 +33,7 @@ class RouteImportGenerator
 
     public static function instance(): RouteImportGenerator
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             self::$instance = new RouteImportGenerator();
         }
 
@@ -41,10 +47,9 @@ class RouteImportGenerator
         }
         $path = $namespaceResolver->getWorkingDir('Resources/Config/routes.xml');
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             $this->createRoutesFile($namespaceResolver);
         }
-
 
         $routesFile = file_get_contents($path) ?: throw new \RuntimeException('Could not read routesFile ' . $path);
         $newContent = '';
@@ -70,23 +75,21 @@ class RouteImportGenerator
         $fileSystem->dumpFile($path, $routesFile); //@todo catch error
     }
 
-    public function addRoute(ServiceInterface $service): self {
+    public function addRoute(ServiceInterface $service): self
+    {
         $this->routes[] = $service;
 
         return $this;
     }
 
-    private function createRoutesFile(NamespaceResolverInterface $namespaceResolver): void {
-
-        $twig =  new TwigParser();
+    private function createRoutesFile(NamespaceResolverInterface $namespaceResolver): void
+    {
+        $twig = new TwigParser();
         $twig->setTemplateData([]);
         $generator = new DirectoryGenerator($namespaceResolver->getWorkingDir('Resources/config'), $twig);
 
         $templatePath = __DIR__ . sprintf('/../../Resources/skeleton/%s', 'Config/Routes');
         $directory = (new TreeBuilder())->buildTree($templatePath, '');
         $generator->generate($directory);
-
     }
-
-
 }

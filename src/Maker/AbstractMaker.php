@@ -14,20 +14,21 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class AbstractMaker implements \Pureware\PurewareCli\Maker\MakerInterface
 {
-
     public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
     {
         throw new \RuntimeException('make() method not implemented.');
     }
 
-    protected function getDirectoryGenerator(NamespaceResolverInterface $namespaceResolver,  InputInterface $input, string $directory): GeneratorInterface {
+    protected function getDirectoryGenerator(NamespaceResolverInterface $namespaceResolver, InputInterface $input, string $directory): GeneratorInterface
+    {
         $generator = new DirectoryGenerator($namespaceResolver->getWorkingDir($directory), new TwigParser());
         $generator->setForce((bool) $input->getOption('force'));
 
         return $generator;
     }
 
-    protected function getTemplatePath(string $subPath): string {
+    protected function getTemplatePath(string $subPath): string
+    {
         return __DIR__ . sprintf('/../Resources/skeleton/%s', $subPath);
     }
 
@@ -52,7 +53,7 @@ class AbstractMaker implements \Pureware\PurewareCli\Maker\MakerInterface
                 [
                     'locale' => $locale,
                     'moduleName' => $options['moduleName'],
-                    'baseSnippet' => $options['baseSnippet'] ?? ''
+                    'baseSnippet' => $options['baseSnippet'] ?? '',
                 ]
             );
             $generator->setForce(false); // do not override snippet files because the< share data between different components
@@ -68,10 +69,11 @@ class AbstractMaker implements \Pureware\PurewareCli\Maker\MakerInterface
     /**
      * @param array<string|bool> $options
      */
-    protected function getSubDirectory(InputInterface $input, array $options, ?string $default = null): string {
+    protected function getSubDirectory(InputInterface $input, array $options, ?string $default = null): string
+    {
         $subDirectory = $input->getOption('workingDir') ?? $options['workingDir'] ?? $default;
 
-        if (!$subDirectory) {
+        if (! $subDirectory) {
             throw new \RuntimeException('You need to pass a workingDir');
         }
 

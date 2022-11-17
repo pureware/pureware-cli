@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Maker\Controller;
 
@@ -17,16 +19,16 @@ use Symfony\Component\String\UnicodeString;
 
 class ControllerMaker extends AbstractMaker implements MakerInterface
 {
-
-    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection {
+    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
+    {
         $routeScope = $input->getOption('routeScope') ?? $options['routeScope'];
         $httpMethod = $input->getOption('method') ?? $options['method'];
 
-        if (!in_array($routeScope, ['storefront', 'api'])) {
+        if (! in_array($routeScope, ['storefront', 'api'])) {
             throw new \RuntimeException('Route Scope has to be storefront or api');
         }
 
-        if (!in_array($httpMethod, [ 'GET', 'POST', 'PUT', 'HEAD', 'DELETE', 'PATCH', 'OPTIONS', 'CONNECT', 'TRACE'])) {
+        if (! in_array($httpMethod, ['GET', 'POST', 'PUT', 'HEAD', 'DELETE', 'PATCH', 'OPTIONS', 'CONNECT', 'TRACE'])) {
             throw new \RuntimeException('Unknown http method passed.');
         }
 
@@ -35,7 +37,7 @@ class ControllerMaker extends AbstractMaker implements MakerInterface
 
         $controllerName = $options['controllerName'] ?? $input->getArgument('name');
 
-        if (!$controllerName) {
+        if (! $controllerName) {
             throw new \RuntimeException('You need a controller name to creat a controller.');
         }
 
@@ -54,7 +56,7 @@ class ControllerMaker extends AbstractMaker implements MakerInterface
                 'basicRoute' => $basicRoute,
                 'routeName' => $routeName,
                 'isAjax' => $input->getOption('isAjax'),
-                'isStorefront' => $isStorefront
+                'isStorefront' => $isStorefront,
             ]
         );
 
@@ -65,7 +67,7 @@ class ControllerMaker extends AbstractMaker implements MakerInterface
             (new ServiceFactory())->generateServiceController($namespaceResolver->getFullNamespace($subDirectory . '/' . $controllerName . 'Controller'))
         );
 
-        if (!$input->getOption('workingDir')) {
+        if (! $input->getOption('workingDir')) {
             $route = $isStorefront ? '../../Storefront/Controller/*Controller.php' : '../../Api/Controller/*Controller.php';
             RouteImportGenerator::instance()->addRoute(
                 (new RouteFactory())->generateRoute($route)
@@ -74,5 +76,4 @@ class ControllerMaker extends AbstractMaker implements MakerInterface
 
         return (new DirectoryCollection([$directory]));
     }
-
 }

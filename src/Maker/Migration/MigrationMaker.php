@@ -12,8 +12,8 @@ use Symfony\Component\Console\Input\InputInterface;
 
 class MigrationMaker extends AbstractMaker implements MakerInterface
 {
-
-    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection {
+    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
+    {
         $subDirectory = 'Migration';
 
         $generator = $this->getDirectoryGenerator($namespaceResolver, $input, $subDirectory);
@@ -21,7 +21,7 @@ class MigrationMaker extends AbstractMaker implements MakerInterface
         $generator->getParser()->setTemplateData(
             [
                 'suffix' => $options['suffix'] ?? '',
-                'timestamp' => $options['timestamp'] ?? $this->getTimestamp()
+                'timestamp' => $options['timestamp'] ?? $this->getTimestamp(),
             ]
         );
 
