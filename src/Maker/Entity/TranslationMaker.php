@@ -34,7 +34,11 @@ class TranslationMaker extends EntityDependentMaker implements MakerInterface
         if ($input->hasOption('parentClass') && $input->getOption('parentClass')) {
             return $namespaceResolver->getFullNamespace($input->getOption('parentClass'));
         } else {
-            return $options['parentClass'] ?? throw new \RuntimeException('You need to pass a parentClass definition. e.g. Content/EntityName/EntityNameDefinition');
+            if ($options['parentClass']) {
+                return $options['parentClass'];
+            } else {
+                throw new \RuntimeException('You need to pass a parentClass definition. e.g. Content/EntityName/EntityNameDefinition');
+            }
         }
     }
 }

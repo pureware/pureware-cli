@@ -45,7 +45,11 @@ class ServiceTagGenerator
             return;
         }
 
-        $servicesFile = file_get_contents($path) ?: throw new \RuntimeException('Could not read servicesFile ' . $path);
+        if (file_get_contents($path)) {
+            $servicesFile = file_get_contents($path);
+        } else {
+            throw new \RuntimeException('Could not read servicesFile ' . $path);
+        }
         $newContent = '';
 
         foreach ($this->services as $service) {

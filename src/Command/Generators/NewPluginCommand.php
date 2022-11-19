@@ -1,6 +1,6 @@
 <?php
 
-namespace Pureware\PurewareCli\Command\New;
+namespace Pureware\PurewareCli\Command\Generators;
 
 use Pureware\PurewareCli\Generator\Plugin\PluginGenerator;
 use Symfony\Component\Console\Command\Command;

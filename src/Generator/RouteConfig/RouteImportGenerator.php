@@ -51,7 +51,11 @@ class RouteImportGenerator
             $this->createRoutesFile($namespaceResolver);
         }
 
-        $routesFile = file_get_contents($path) ?: throw new \RuntimeException('Could not read routesFile ' . $path);
+        if (file_get_contents($path)) {
+            $routesFile = file_get_contents($path);
+        } else {
+            throw new \RuntimeException('Could not read routesFile ' . $path);
+        }
         $newContent = '';
 
         foreach ($this->routes as $route) {
