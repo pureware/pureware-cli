@@ -10,7 +10,9 @@ return static function (RectorConfig $rectorConfig): void {
     // tip: use "SetList" class to autocomplete sets
     $rectorConfig->sets([
         SetList::DEAD_CODE,
-        SetList::PHP_74
+        SetList::PHP_74,
+    \Rector\Set\ValueObject\DowngradeLevelSetList::DOWN_TO_PHP_74
+
     ]);
     $rectorConfig->paths(
         [
