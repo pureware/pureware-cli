@@ -20,7 +20,7 @@
         "ext-json": "*",
         "shopware/core": "^6.4",
         "shopware/storefront": "^6.4",
-        "pureware/template-generator": "0.2.0"
+        "pureware/template-generator": "^0.2.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0|^9.3",
