@@ -33,18 +33,18 @@ jobs:
       - name: Run test suite on PHP ${{ matrix.php }}
         run: vendor/bin/phpunit --testdox
 
-    ecs:
-      name: Easy Coding Standard
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - uses: ramsey/composer-install@v2
-        - run: vendor/bin/ecs
+  ecs:
+    name: Easy Coding Standard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ramsey/composer-install@v2
+      - run: vendor/bin/ecs
 
-    phpstan:
-      name: PHPStan
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - uses: ramsey/composer-install@v2
-        - run: vendor/bin/phpstan
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ramsey/composer-install@v2
+      - run: vendor/bin/phpstan
