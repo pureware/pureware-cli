@@ -1,0 +1,33 @@
+image: php:8.0
+
+cache:
+  cache:
+    key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+  paths:
+    - vendor/
+
+before_script:
+  - apt update -yqq
+  - apt install git libpq-dev libzip-dev zlib1g-dev libpng-dev libfreetype6-dev libjpeg-dev libicu-dev zip -yqq
+
+  # Install php extensions
+  - docker-php-ext-install pdo_mysql zip intl
+  - docker-php-ext-configure gd --with-freetype --with-jpeg
+  - docker-php-ext-install -j "$(nproc)" gd
+
+  # Install composer
+  - curl -sS https://getcomposer.org/installer | php
+
+  # Install all project dependencies
+  - php composer.phar install
+
+
+test:php8.0:
+  image: php:8.0
+  script:
+    - vendor/bin/phpunit
+
+test:php7.4:
+  image: php:7.4
+  script:
+    - vendor/bin/phpunit
