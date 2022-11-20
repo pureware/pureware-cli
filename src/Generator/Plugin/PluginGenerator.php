@@ -165,7 +165,7 @@ class PluginGenerator implements GeneratorInterface
     protected function executeCommands($commands, OutputInterface $output): Process
     {
         $cli = Process::fromShellCommandline(implode(' && ', $commands));
-        $cli->setTty(true);
+        $cli->setTty(false);
 
         $cli->run(function ($type, $line) use ($output) {
             $output->write($line);

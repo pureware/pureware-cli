@@ -23,6 +23,7 @@ class PluginGeneratorTest extends TestCase
 
 
         $application = new Application();
+        $application->setAutoExit(true);
         $application->add(new NewPluginCommand());
         $command = $application->find('new:plugin');
         $command = new CommandTester($command);
@@ -55,6 +56,7 @@ class PluginGeneratorTest extends TestCase
 
 
         $application = new Application();
+        $application->setAutoExit(true);
         $application->add(new NewPluginCommand());
         $command = $application->find('new:plugin');
         $command = new CommandTester($command);
@@ -64,7 +66,8 @@ class PluginGeneratorTest extends TestCase
                 '--workingDir' => $executeDirectory,
                 '--git' => true,
                 '--quiet' => true,
-                '--shopwareVersion' => '6.4.15.1'
+                '--shopwareVersion' => '6.4.15.1',
+                '--no-interaction' => true
             ]
         );
 
