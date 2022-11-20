@@ -43,7 +43,8 @@ class EntityMakerTest extends TestCase
         ];
 
         foreach ($paths as $path) {
-            $this->assertFileExists($testDirectory . $path);
+            $dirPath = $testDirectory . $path;
+            $this->assertFileExists($dirPath, sprintf('The directory %s does not exist', $dirPath));
         }
 
     }
