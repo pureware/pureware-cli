@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        operating-system: [macOS-latest, ubuntu-latest ]
+        operating-system: [macOS-latest, windows-latest, ubuntu-latest ]
         php: [ '7.4', '8.0' ]
 
     steps:
