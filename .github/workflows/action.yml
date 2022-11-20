@@ -1,40 +1,36 @@
-name: PHP Composer
+name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [master]
   pull_request:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
+    branches: [master]
 
 jobs:
-  build:
 
+  phpunit:
+    name: PHPUnit with PHP ${{ matrix.php }}
     runs-on: ${{ matrix.operating-system }}
+
     strategy:
+      fail-fast: false
       matrix:
-        operating-system: [ubuntu-latest, windows-latest, macOS-latest]
-        php-versions: ['7.4', '8.0']
+        operating-system: [ ubuntu-latest, windows-latest ]
+        php: [ '7.4', '8.0' ]
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate --strict
-
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v3
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
-          path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-php-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+          php-version: ${{ matrix.php }}
+          tools: flex
+          coverage: none
 
-      - name: Run test suite
-        run: composer run-script test
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v2
+
+      - name: Run test suite on PHP ${{ matrix.php }}
+        run: vendor/bin/phpunit tests
