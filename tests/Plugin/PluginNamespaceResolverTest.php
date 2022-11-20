@@ -8,7 +8,10 @@ use Pureware\PurewareCli\Resolver\PluginNamespaceResolver;
 class PluginNamespaceResolverTest extends \PHPUnit\Framework\TestCase
 {
 
-    protected NamespaceResolverInterface $resolver;
+    /**
+     * @var \Pureware\PurewareCli\Resolver\NamespaceResolverInterface
+     */
+    protected $resolver;
 
     public function setUp(): void
     {

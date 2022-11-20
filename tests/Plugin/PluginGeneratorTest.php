@@ -26,7 +26,7 @@ class PluginGeneratorTest extends TestCase
         $application->add(new NewPluginCommand());
         $command = $application->find('new:plugin');
         $command = new CommandTester($command);
-        $execute = $command->execute(
+        $command->execute(
             [
                 'pluginName' => $testPluginName,
                 '--workingDir' => $executeDirectory,
@@ -57,7 +57,7 @@ class PluginGeneratorTest extends TestCase
         $application->add(new NewPluginCommand());
         $command = $application->find('new:plugin');
         $command = new CommandTester($command);
-        $execute = $command->execute(
+        $command->execute(
             [
                 'pluginName' => $testPluginName,
                 '--workingDir' => $executeDirectory,

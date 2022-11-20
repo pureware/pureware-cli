@@ -19,14 +19,17 @@ use Symfony\Component\Finder\Finder;
 class EntityMakerTest extends TestCase
 {
 
-    protected string $testDirectory = 'test_output/TestPlugin/src';
+    /**
+     * @var string
+     */
+    protected $testDirectory = 'test_output/TestPlugin/src';
 
-    public function test_command_creates_new_entity()
+    public function test_command_creates_new_entity(): void
     {
         $maker = new EntityMaker(new MigrationMaker(), new HydratorMaker(), new Many2ManyMaker(), new TranslationMaker());
         $namespaceResolver = $this->getNamespaceResolver();
         $input = $this->getInputInterface();
-        $maker->make($namespaceResolver, $input, ['timestamp' => 1667133679]);
+        $maker->make($namespaceResolver, $input, ['timestamp' => '1667133679']);
 
         $testDirectory = __DIR__ . '/../../' . $this->testDirectory;
         $paths = [
@@ -57,20 +60,27 @@ class EntityMakerTest extends TestCase
         $input = $this->createMock(InputInterface::class);
         $input->method('getOption')->will(
             $this->returnCallback(function ($arg) {
-                return match ($arg) {
-                    'translation', 'force', 'migration' => true,
-                    'prefix' => 'pure',
-                    default => null,
-                };
+                switch ($arg) {
+                    case 'translation':
+                    case 'force':
+                    case 'migration':
+                        return true;
+                    case 'prefix':
+                        return 'pure';
+                    default:
+                        return null;
+                }
             })
         );
 
         $input->method('getArgument')->will(
             $this->returnCallback(function ($arg) {
-                return match ($arg) {
-                    'name' => 'FantasyName',
-                    default => null,
-                };
+                switch ($arg) {
+                    case 'name':
+                        return 'FantasyName';
+                    default:
+                        return null;
+                }
             })
         );
 
