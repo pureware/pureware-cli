@@ -32,4 +32,5 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Run test suite
+        php-version: 7.4
         run: composer run-script test
