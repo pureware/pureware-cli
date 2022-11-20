@@ -1,8 +1,7 @@
 image: php:8.0
 
 cache:
-  cache:
-    key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+  key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
   paths:
     - vendor/
 
