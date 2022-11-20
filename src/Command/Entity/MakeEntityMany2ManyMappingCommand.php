@@ -22,9 +22,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class MakeEntityMany2ManyMappingCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:entity:many2many';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(self::$defaultName)

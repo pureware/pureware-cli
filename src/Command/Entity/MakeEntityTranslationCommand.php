@@ -22,9 +22,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class MakeEntityTranslationCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:entity:translation';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(self::$defaultName)

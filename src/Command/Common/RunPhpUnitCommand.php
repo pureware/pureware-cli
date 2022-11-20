@@ -24,9 +24,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class RunPhpUnitCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'test:phpunit';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(self::$defaultName)

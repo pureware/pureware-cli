@@ -17,7 +17,10 @@ class EntityDependentMaker extends AbstractMaker implements MakerInterface
         throw new \RuntimeException('make() method not implemented.');
     }
 
-    protected function getSkipPaths()
+    /**
+     * @return string[]
+     */
+    protected function getSkipPaths(): array
     {
         return [
             '{{entityName|u.camel.title}}Definition.php',

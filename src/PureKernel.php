@@ -5,21 +5,22 @@ namespace Pureware\PurewareCli;
 use Pureware\PurewareCli\DependencyInjection\CommandsToApplicationCompilerPass;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 final class PureKernel extends Kernel
 {
     /**
-     * In more complex app, add bundles here
+     * @return array|BundleInterface[]
      */
     public function registerBundles(): array
     {
         return [];
     }
 
-    protected function build(ContainerBuilder $containerBuilder): void
+    protected function build(ContainerBuilder $container): void
     {
-        $containerBuilder->addCompilerPass(new CommandsToApplicationCompilerPass());
+        $container->addCompilerPass(new CommandsToApplicationCompilerPass());
     }
 
     /**

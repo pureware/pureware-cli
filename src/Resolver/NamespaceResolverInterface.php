@@ -4,7 +4,7 @@ namespace Pureware\PurewareCli\Resolver;
 
 interface NamespaceResolverInterface
 {
-    public function resolvePluginNamespace(string $composerJson);
+    public function resolvePluginNamespace(string $composerJson): void;
 
     public function getFullNamespace(?string $additional = null): string;
 

@@ -10,12 +10,12 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class CommandsToApplicationCompilerPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $containerBuilder): void
+    public function process(ContainerBuilder $container): void
     {
-        $applicationDefinition = $containerBuilder->getDefinition(Application::class);
+        $applicationDefinition = $container->getDefinition(Application::class);
 
-        foreach ($containerBuilder->getDefinitions() as $name => $definition) {
-            if (is_a($definition->getClass(), Command::class, true)) {
+        foreach ($container->getDefinitions() as $name => $definition) {
+            if (is_a($definition->getClass() ?: '', Command::class, true)) {
                 $applicationDefinition->addMethodCall('add', [new Reference($name)]);
             }
         }

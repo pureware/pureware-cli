@@ -10,7 +10,7 @@ class PluginNamespaceResolver implements NamespaceResolverInterface
 
     protected string $pluginName;
 
-    public function resolvePluginNamespace(string $composerJson)
+    public function resolvePluginNamespace(string $composerJson): void
     {
         $separator = '_NAMESPACE_SEPARATOR_';
         $composer = json_decode(stripslashes(str_replace('\\', $separator, $composerJson)), true); //workaround for stripslashes
@@ -28,6 +28,10 @@ class PluginNamespaceResolver implements NamespaceResolverInterface
 
             $namespace = str_replace($separator, '\\', key($path));
             $namespace = str_replace('\\\\', '\\', $namespace);
+            if (! is_string($namespace)) {
+                continue;
+            }
+
             $this->pluginBaseNamespace = rtrim($namespace, '\\');
             $this->pluginName = str_replace('\\', '', $this->pluginBaseNamespace);
             $this->pluginSrcPath = getcwd() . DIRECTORY_SEPARATOR . rtrim(current($path), '/');

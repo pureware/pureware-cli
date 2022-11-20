@@ -8,6 +8,7 @@ use Pureware\TemplateGenerator\Parser\TwigParser;
 use Pureware\TemplateGenerator\TreeBuilder\TreeBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\Input;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -30,7 +31,7 @@ class PluginGenerator implements GeneratorInterface
 
     private string $shopwareVersion;
 
-    public function generate(Input $input, Output $output): int
+    public function generate(InputInterface $input, OutputInterface $output): int
     {
         $this->pluginName = $input->getArgument('pluginName');
 
@@ -38,6 +39,10 @@ class PluginGenerator implements GeneratorInterface
         $io->progressStart(4);
         if (! $this->pluginName) {
             $this->pluginName = $io->ask('Name of the plugin');
+        }
+
+        if (empty($this->pluginName)) {
+            throw new \RuntimeException('You need to pass a plugin name');
         }
 
         $this->shopwareVersion = $input->getOption('shopwareVersion') ?? $this->getLatestShopwareVersion();
@@ -85,7 +90,7 @@ class PluginGenerator implements GeneratorInterface
             $generator->setForce(true);
         }
 
-        $directory = (new TreeBuilder())->buildTree(__DIR__ . '/../../Resources/skeleton/Plugin', $this->pluginName);
+        $directory = (new TreeBuilder())->buildTree(__DIR__ . '/../../Resources/skeleton/Plugin', $this->pluginName ?: '');
         $io->progressAdvance(1);
 
         $generator->generate($directory);
@@ -119,7 +124,7 @@ class PluginGenerator implements GeneratorInterface
 
     public function resolveNamespace(): void
     {
-        $snakeCase = (new UnicodeString($this->pluginName))->camel()->title()->snake();
+        $snakeCase = (new UnicodeString($this->pluginName ?: ''))->camel()->title()->snake();
         $strings = explode('_', $snakeCase);
         if (count($strings) < 2) {
             throw new \RuntimeException('Could not resolve a namespace for this plugin name. Provide a name with a prefix i.e. SwagPlugin');
@@ -162,7 +167,10 @@ class PluginGenerator implements GeneratorInterface
         $this->executeCommands($commands, $output);
     }
 
-    protected function executeCommands($commands, OutputInterface $output): Process
+    /**
+     * @param array<string> $commands
+     */
+    protected function executeCommands(array $commands, OutputInterface $output): Process
     {
         $cli = Process::fromShellCommandline(implode(' && ', $commands));
         $cli->setTty(false);

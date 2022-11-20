@@ -21,7 +21,6 @@ class PluginGeneratorTest extends TestCase
 
         $this->assertDirectoryDoesNotExist($fullPath, 'Plugin still exist');
 
-
         $application = new Application();
         $application->setAutoExit(true);
         $application->add(new NewPluginCommand());
@@ -33,13 +32,12 @@ class PluginGeneratorTest extends TestCase
                 '--workingDir' => $executeDirectory,
                 '--git' => true,
                 '--quiet' => true,
-                '--no-interaction' => true
+                '--no-interaction' => true,
             ]
         );
 
         $this->assertDirectoryExists($fullPath, 'Plugin dir does not exists');
         $this->assertDirectoryExists($fullPath . DIRECTORY_SEPARATOR . '.git', 'Git dir does not exists');
-
     }
 
     public function test_command_creates_new_plugin_with_shopware_version()
@@ -54,7 +52,6 @@ class PluginGeneratorTest extends TestCase
 
         $this->assertDirectoryDoesNotExist($fullPath, 'Plugin still exist');
 
-
         $application = new Application();
         $application->setAutoExit(true);
         $application->add(new NewPluginCommand());
@@ -67,12 +64,11 @@ class PluginGeneratorTest extends TestCase
                 '--git' => true,
                 '--quiet' => true,
                 '--shopwareVersion' => '6.4.15.1',
-                '--no-interaction' => true
+                '--no-interaction' => true,
             ]
         );
 
         $this->assertDirectoryExists($fullPath, 'Plugin dir does not exists');
         $this->assertDirectoryExists($fullPath . DIRECTORY_SEPARATOR . '.git', 'Git dir does not exists');
-
     }
 }

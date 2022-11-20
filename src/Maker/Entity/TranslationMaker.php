@@ -29,12 +29,15 @@ class TranslationMaker extends EntityDependentMaker implements MakerInterface
         return new DirectoryCollection([$hydratorDirectory]);
     }
 
+    /**
+     * @param array<string|bool> $options
+     */
     private function resolveParentClassNamespace(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options): string
     {
         if ($input->hasOption('parentClass') && $input->getOption('parentClass')) {
             return $namespaceResolver->getFullNamespace($input->getOption('parentClass'));
         } else {
-            if ($options['parentClass']) {
+            if (isset($options['parentClass']) && is_string($options['parentClass'])) {
                 return $options['parentClass'];
             } else {
                 throw new \RuntimeException('You need to pass a parentClass definition. e.g. Content/EntityName/EntityNameDefinition');

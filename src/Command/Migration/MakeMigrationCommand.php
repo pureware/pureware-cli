@@ -20,9 +20,12 @@ use Symfony\Component\String\UnicodeString;
 
 class MakeMigrationCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:migration';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(self::$defaultName)

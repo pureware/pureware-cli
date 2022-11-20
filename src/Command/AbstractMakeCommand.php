@@ -16,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 abstract class AbstractMakeCommand extends Command
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Override files. Be careful when using!')

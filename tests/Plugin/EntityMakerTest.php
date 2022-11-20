@@ -18,7 +18,6 @@ use Symfony\Component\Finder\Finder;
 
 class EntityMakerTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -26,8 +25,7 @@ class EntityMakerTest extends TestCase
 
     public function test_command_creates_new_entity(): void
     {
-
-        if (!file_exists(__DIR__ . '/../../TestPlugin')) {
+        if (! file_exists(__DIR__ . '/../../TestPlugin')) {
             $fileSystem = new Filesystem();
             $fileSystem->mkdir(__DIR__ . '/../../' . $this->testDirectory);
         }
@@ -36,7 +34,9 @@ class EntityMakerTest extends TestCase
         $namespaceResolver = $this->getNamespaceResolver();
         $input = $this->getInputInterface();
         $input->setInteractive(false);
-        $maker->make($namespaceResolver, $input, ['timestamp' => '1667133679']);
+        $maker->make($namespaceResolver, $input, [
+            'timestamp' => '1667133679',
+        ]);
 
         $testDirectory = __DIR__ . '/../../' . $this->testDirectory;
         $paths = [
@@ -53,12 +53,12 @@ class EntityMakerTest extends TestCase
             $dirPath = $testDirectory . $path;
             $this->assertFileExists($dirPath, sprintf('The directory %s does not exist', $dirPath));
         }
-
     }
 
-    private function getNamespaceResolver(): NamespaceResolverInterface {
+    private function getNamespaceResolver(): NamespaceResolverInterface
+    {
         $resolver = new PluginNamespaceResolver();
-        $resolver->resolvePluginNamespace('{"name":"pure/new-plugin","type":"shopware-platform-plugin","require":{},"autoload":{"psr-4":{"Pure\\NewPlugin\\":"' . $this->testDirectory .'"}},"extra":{}}');
+        $resolver->resolvePluginNamespace('{"name":"pure/new-plugin","type":"shopware-platform-plugin","require":{},"autoload":{"psr-4":{"Pure\\NewPlugin\\":"' . $this->testDirectory . '"}},"extra":{}}');
 
         return $resolver;
     }

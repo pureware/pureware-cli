@@ -23,9 +23,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class MakeEntityCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:entity';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(self::$defaultName)

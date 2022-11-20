@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class NewPluginCommand extends Command
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('new:plugin')
