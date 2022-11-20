@@ -9,7 +9,7 @@ on:
 jobs:
 
   phpunit:
-    name: PHPUnit with PHP ${{ matrix.php }}
+    name: PHPUnit with PHP ${{ matrix.php }} (${{ matrix.operating-system }})
     runs-on: ${{ matrix.operating-system }}
 
     strategy:
