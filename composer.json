@@ -4,6 +4,9 @@
     "type": "project",
     "license": "MIT",
     "bin": ["bin/pure"],
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
     "autoload": {
         "psr-4": {
             "Pureware\\PurewareCli\\": "src/"
