@@ -25,7 +25,7 @@ class MigrationMaker extends AbstractMaker implements MakerInterface
             ]
         );
 
-        $migrationDirectory = (new TreeBuilder())->buildTree($this->getTemplatePath('migration'), $namespaceResolver->getFullNamespace($subDirectory), $subDirectory);
+        $migrationDirectory = (new TreeBuilder())->buildTree($this->getTemplatePath('Migration'), $namespaceResolver->getFullNamespace($subDirectory), $subDirectory);
         $generator->generate($migrationDirectory);
 
         return new DirectoryCollection([$migrationDirectory]);

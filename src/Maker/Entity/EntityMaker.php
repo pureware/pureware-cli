@@ -57,7 +57,7 @@ class EntityMaker extends AbstractMaker implements MakerInterface
 
         $treeBuilder->skip($skiPaths);
 
-        $entityDirectory = $treeBuilder->buildTree(__DIR__ . '/../../Resources/skeleton/entity', $namespaceResolver->getFullNamespace($subDirPath), $entityName);
+        $entityDirectory = $treeBuilder->buildTree(__DIR__ . '/../../Resources/skeleton/Entity', $namespaceResolver->getFullNamespace($subDirPath), $entityName);
         $generator->generate($entityDirectory);
 
         $subDir = new Directory($subDirPath);
