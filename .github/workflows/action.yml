@@ -26,11 +26,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          tools: flex
-          coverage: none
 
       - name: Install composer dependencies
         uses: ramsey/composer-install@v2
 
       - name: Run test suite on PHP ${{ matrix.php }}
-        run: vendor/bin/phpunit tests
+        run: vendor/bin/phpunit --testdox

@@ -26,6 +26,12 @@ class EntityMakerTest extends TestCase
 
     public function test_command_creates_new_entity(): void
     {
+
+        if (!file_exists(__DIR__ . '/../../TestPlugin')) {
+            $fileSystem = new Filesystem();
+            $fileSystem->mkdir(__DIR__ . '/../../' . $this->testDirectory);
+        }
+
         $maker = new EntityMaker(new MigrationMaker(), new HydratorMaker(), new Many2ManyMaker(), new TranslationMaker());
         $namespaceResolver = $this->getNamespaceResolver();
         $input = $this->getInputInterface();
