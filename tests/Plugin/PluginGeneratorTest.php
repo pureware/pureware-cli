@@ -31,7 +31,8 @@ class PluginGeneratorTest extends TestCase
                 'pluginName' => $testPluginName,
                 '--workingDir' => $executeDirectory,
                 '--git' => true,
-                '--quiet' => true
+                '--quiet' => true,
+                '--no-interaction' => true
             ]
         );
 

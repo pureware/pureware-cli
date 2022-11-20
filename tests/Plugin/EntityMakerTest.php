@@ -29,6 +29,7 @@ class EntityMakerTest extends TestCase
         $maker = new EntityMaker(new MigrationMaker(), new HydratorMaker(), new Many2ManyMaker(), new TranslationMaker());
         $namespaceResolver = $this->getNamespaceResolver();
         $input = $this->getInputInterface();
+        $input->setInteractive(false);
         $maker->make($namespaceResolver, $input, ['timestamp' => '1667133679']);
 
         $testDirectory = __DIR__ . '/../../' . $this->testDirectory;
