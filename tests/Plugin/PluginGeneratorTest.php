@@ -3,7 +3,7 @@
 namespace Pureware\PurewareCli\Tests\Plugin;
 
 use PHPUnit\Framework\TestCase;
-use Pureware\PurewareCli\Command\New\NewPluginCommand;
+use Pureware\PurewareCli\Command\Generators\NewPluginCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
