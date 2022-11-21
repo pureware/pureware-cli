@@ -2,6 +2,8 @@
 
 namespace Pureware\PurewareCli\Maker\Entity;
 
+use Pureware\PurewareCli\Generator\ContainerConfig\ServiceFactory;
+use Pureware\PurewareCli\Generator\ContainerConfig\ServiceTagGenerator;
 use Pureware\PurewareCli\Maker\AbstractMaker;
 use Pureware\PurewareCli\Maker\MakerInterface;
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
@@ -63,6 +65,14 @@ class EntityMaker extends AbstractMaker implements MakerInterface
         $subDir = new Directory($subDirPath);
         $subDir->setDirectories(new DirectoryCollection([$entityDirectory]));
         $createdDirectories = new DirectoryCollection([$subDir]);
+
+        ServiceTagGenerator::instance()->addService(
+            (new ServiceFactory())->generateEntityServiceTag(
+                $namespaceResolver->getFullNamespace($subDirPath . '/' . $entityName . 'Definition'),
+                'shopware.entity.definition',
+                (new UnicodeString( $input->getOption('prefix') . $entityName ))->snake()->toString()
+            )
+        );
 
         if ($input->getOption('translation')) {
             $createdDirectories = $createdDirectories->merge($this->translationMaker->make($namespaceResolver, $input, array_merge([
