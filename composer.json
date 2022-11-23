@@ -5,7 +5,8 @@
     "license": "MIT",
     "bin": ["bin/pure"],
     "scripts": {
-        "test": "vendor/bin/phpunit"
+        "test": "vendor/bin/phpunit",
+        "ecs": "vendor/bin/ecs"
     },
     "autoload": {
         "psr-4": {

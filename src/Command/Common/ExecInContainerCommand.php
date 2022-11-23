@@ -22,34 +22,26 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class RunPhpUnitCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
+class ExecInContainerCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
     /**
      * @var string
      */
-    protected static $defaultName = 'test:phpunit';
+    protected static $defaultName = 'docker:bash';
 
     protected function configure(): void
     {
         $this
             ->setName(self::$defaultName)
-            ->setDescription('Run PHP Unit inside the docker container')
-            ->addArgument('pluginName', InputArgument::OPTIONAL, 'The name of the plugin you want to test. (optional, default will be the current plugin)', null)
-            ->addOption('dockerImage', 'd', InputOption::VALUE_OPTIONAL, 'The docker image name', 'shop')
-            ->addOption('options', null, InputOption::VALUE_OPTIONAL, 'The options that are added to the phpunit command as string i.e.  --options="--testdox"', '--colors=always --testdox');
+            ->setDescription('Execute bash inside container')
+            ->addOption('dockerImage', 'd', InputOption::VALUE_OPTIONAL, 'The docker image name', 'shop');
         parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $pluginName = $input->getArgument('pluginName');
-        if (! $input->getArgument('pluginName')) {
-            $resolver = $this->getNamespaceResolver();
-            $pluginName = $resolver->getPluginName();
-        }
 
-        $command = sprintf('docker compose exec %s vendor/bin/phpunit --configuration="%s" %s', $input->getOption('dockerImage'), 'custom/plugins/' . $pluginName, $input->getOption('options'));
-//        $command = sprintf('docker exec %s vendor/bin/phpunit --configuration="%s" %s', $input->getOption('container'), );
+        $command = sprintf('docker compose exec %s bash', $input->getOption('dockerImage'));
 
         $cli = Process::fromShellCommandline($command, null, null, null, null);
         $cli->setTty(true);
