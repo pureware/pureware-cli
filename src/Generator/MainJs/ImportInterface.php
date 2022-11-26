@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Pureware\PurewareCli\Generator\ContainerConfig;
+namespace Pureware\PurewareCli\Generator\MainJs;
 
-interface ServiceInterface
+interface ImportInterface
 {
     public function getTemplate(): string;
 

@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Maker\Admin;
 
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportFactory;
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportGenerator;
 use Pureware\PurewareCli\Maker\AbstractMaker;
 use Pureware\PurewareCli\Maker\MakerInterface;
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
 use Pureware\TemplateGenerator\TreeBuilder\Directory\DirectoryCollection;
 use Pureware\TemplateGenerator\TreeBuilder\TreeBuilder;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\String\UnicodeString;
 
 class AdminComponentMaker extends AbstractMaker implements MakerInterface
 {
@@ -29,7 +33,6 @@ class AdminComponentMaker extends AbstractMaker implements MakerInterface
             [
                 'moduleName' => $moduleName,
                 'componentName' => $componentName,
-                'mainJsContent' => $this->getMainJsContent($namespaceResolver),
             ]
         );
 
@@ -41,17 +44,13 @@ class AdminComponentMaker extends AbstractMaker implements MakerInterface
         $directory = (new TreeBuilder())->buildTree($this->getTemplatePath($templatePath), $namespaceResolver->getFullNamespace($subDirectory), $subDirectory);
         $generator->generate($directory);
 
+        $importModuleName = (new AsciiSlugger())->slug((new UnicodeString($moduleName))->snake()->toString())->toString();
+        $importComponentName = (new AsciiSlugger())->slug((new UnicodeString($componentName))->snake()->toString())->toString();
+
+        MainJsImportGenerator::instance()->addImport(
+            (new MainJsImportFactory())->createImport(sprintf('module/%s/components/%s', $importModuleName, $importComponentName))
+        );
+
         return (new DirectoryCollection([$directory]));
-    }
-
-    protected function getMainJsContent(NamespaceResolverInterface $namespaceResolver): string
-    {
-        $content = '';
-
-        if (file_exists($namespaceResolver->getWorkingDir('Resources/app/administration/src/main.js'))) {
-            $content = file_get_contents($namespaceResolver->getWorkingDir('Resources/app/administration/src/main.js'));
-        }
-
-        return is_string($content) ? $content : '';
     }
 }

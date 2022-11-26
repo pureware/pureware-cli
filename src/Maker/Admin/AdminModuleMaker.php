@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Maker\Admin;
 
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportGenerator;
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportFactory;
 use Pureware\PurewareCli\Maker\AbstractMaker;
 use Pureware\PurewareCli\Maker\MakerInterface;
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
@@ -30,7 +32,6 @@ class AdminModuleMaker extends AbstractMaker implements MakerInterface
                 'prefix' => $input->getOption('prefix'),
                 'moduleColor' => $input->getOption('moduleColor'),
                 'navigationParent' => $input->getOption('navigationParent'),
-                'mainJsContent' => $this->getMainJsContent($namespaceResolver),
                 'snippetLanguages' => $input->getOption('snippetLanguages'),
             ]
         );
@@ -74,6 +75,10 @@ class AdminModuleMaker extends AbstractMaker implements MakerInterface
             'moduleName' => $prefixedModuleName,
             'baseSnippet' => json_encode($snippetData, JSON_PRETTY_PRINT) ?: '',
         ]);
+
+        MainJsImportGenerator::instance()->addImport(
+            (new MainJsImportFactory())->createImport('module/' . $prefixedModuleName)
+        );
 
         return (new DirectoryCollection([$directory]))->merge($listPage)->merge($detailPage)->merge($createPage)->merge($snippets);
     }

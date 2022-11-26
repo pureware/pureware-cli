@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pureware\PurewareCli\Command\Admin;
 
 use Pureware\PurewareCli\Command\AbstractMakeCommand;
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportGenerator;
 use Pureware\PurewareCli\Maker\Admin\AdminComponentMaker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -34,6 +35,8 @@ class MakeAdminComponentCommand extends AbstractMakeCommand
         $namespaceResolver = $this->getNamespaceResolver();
         $dirs = (new AdminComponentMaker())->make($namespaceResolver, $input);
         $this->renderMaker($dirs, $input, $output, $namespaceResolver);
+
+        MainJsImportGenerator::instance()->generate($input, $output, $namespaceResolver);
 
         return Command::SUCCESS;
     }
