@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Generator\MainJs;
 
@@ -8,10 +10,10 @@ class MainJsImport implements ImportInterface
 
     public function getTemplate(): string
     {
-     return sprintf(
-         "import './%s';",
-        $this->importPath
-     );
+        return sprintf(
+            "import './%s';",
+            $this->importPath
+        );
     }
 
     public function getIdentifier(): string

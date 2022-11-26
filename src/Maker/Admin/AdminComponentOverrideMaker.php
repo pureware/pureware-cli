@@ -44,5 +44,4 @@ class AdminComponentOverrideMaker extends AbstractMaker implements MakerInterfac
 
         return (new DirectoryCollection([$directory]));
     }
-
 }

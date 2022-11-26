@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Maker\Admin;
 
-use Pureware\PurewareCli\Generator\MainJs\MainJsImportGenerator;
 use Pureware\PurewareCli\Generator\MainJs\MainJsImportFactory;
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportGenerator;
 use Pureware\PurewareCli\Maker\AbstractMaker;
 use Pureware\PurewareCli\Maker\MakerInterface;
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
@@ -82,5 +82,4 @@ class AdminModuleMaker extends AbstractMaker implements MakerInterface
 
         return (new DirectoryCollection([$directory]))->merge($listPage)->merge($detailPage)->merge($createPage)->merge($snippets);
     }
-
 }

@@ -28,7 +28,7 @@ class CmsBlockMaker extends AbstractMaker implements MakerInterface
             [
                 'blockName' => $cmsBlockName,
                 'moduleName' => 'sw-cms',
-                'blockCategory' => $input->getOption('category')
+                'blockCategory' => $input->getOption('category'),
             ]
         );
 
@@ -41,7 +41,8 @@ class CmsBlockMaker extends AbstractMaker implements MakerInterface
                     'module/sw-cms/blocks/%s/%s',
                     (new AsciiSlugger())->slug((new UnicodeString($input->getOption('category')))->snake()->toString())->toString(),
                     (new AsciiSlugger())->slug((new UnicodeString($cmsBlockName))->snake()->toString())->toString()
-            ))
+                )
+            )
         );
 
         $directory = $builder->buildTree($this->getTemplatePath('Cms/Element'), $namespaceResolver->getFullNamespace($subDirectory), $subDirectory);
