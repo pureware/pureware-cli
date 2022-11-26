@@ -3,6 +3,7 @@
 namespace Pureware\PurewareCli\Command\Cms;
 
 use Pureware\PurewareCli\Command\AbstractMakeCommand;
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportGenerator;
 use Pureware\PurewareCli\Maker\Cms\CmsElementMaker;
 use Pureware\PurewareCli\Maker\Cms\CmsElementResolverMaker;
 use Symfony\Component\Console\Command\Command;
@@ -34,6 +35,7 @@ class MakeCmsElementCommand extends AbstractMakeCommand
         $namespaceResolver = $this->getNamespaceResolver();
         $dirs = (new CmsElementMaker(new CmsElementResolverMaker()))->make($namespaceResolver, $input);
         $this->renderMaker($dirs, $input, $output, $namespaceResolver);
+        (MainJsImportGenerator::instance())->generate($input, $output, $namespaceResolver);
 
         return Command::SUCCESS;
     }

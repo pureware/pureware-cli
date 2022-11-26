@@ -83,14 +83,4 @@ class AdminModuleMaker extends AbstractMaker implements MakerInterface
         return (new DirectoryCollection([$directory]))->merge($listPage)->merge($detailPage)->merge($createPage)->merge($snippets);
     }
 
-    protected function getMainJsContent(NamespaceResolverInterface $namespaceResolver): string
-    {
-        $content = '';
-
-        if (file_exists($namespaceResolver->getWorkingDir('Resources/app/administration/src/main.js'))) {
-            $content = file_get_contents($namespaceResolver->getWorkingDir('Resources/app/administration/src/main.js'));
-        }
-
-        return is_string($content) ? $content : '';
-    }
 }

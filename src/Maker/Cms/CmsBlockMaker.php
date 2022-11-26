@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Maker\Cms;
 
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportFactory;
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportGenerator;
 use Pureware\PurewareCli\Maker\AbstractMaker;
 use Pureware\PurewareCli\Maker\MakerInterface;
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
@@ -11,6 +13,7 @@ use Pureware\TemplateGenerator\TreeBuilder\Directory\Directory;
 use Pureware\TemplateGenerator\TreeBuilder\Directory\DirectoryCollection;
 use Pureware\TemplateGenerator\TreeBuilder\TreeBuilder;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\UnicodeString;
 
 class CmsBlockMaker extends AbstractMaker implements MakerInterface
@@ -25,13 +28,21 @@ class CmsBlockMaker extends AbstractMaker implements MakerInterface
             [
                 'blockName' => $cmsBlockName,
                 'moduleName' => 'sw-cms',
-                'blockCategory' => $input->getOption('category'),
-                'mainJsContent' => $this->getMainJsContent($namespaceResolver),
+                'blockCategory' => $input->getOption('category')
             ]
         );
 
         $builder = new TreeBuilder();
         $builder->skip(['module/{{moduleName}}/elements']);
+
+        MainJsImportGenerator::instance()->addImport(
+            (new MainJsImportFactory())->createImport(
+                sprintf(
+                    'module/sw-cms/blocks/%s/%s',
+                    (new AsciiSlugger())->slug((new UnicodeString($input->getOption('category')))->snake()->toString())->toString(),
+                    (new AsciiSlugger())->slug((new UnicodeString($cmsBlockName))->snake()->toString())->toString()
+            ))
+        );
 
         $directory = $builder->buildTree($this->getTemplatePath('Cms/Element'), $namespaceResolver->getFullNamespace($subDirectory), $subDirectory);
         $generator->generate($directory);
@@ -60,17 +71,6 @@ class CmsBlockMaker extends AbstractMaker implements MakerInterface
         ]);
 
         return (new DirectoryCollection([$directory]))->merge($snippetCollection)->merge($storefrontCollection);
-    }
-
-    protected function getMainJsContent(NamespaceResolverInterface $namespaceResolver): string
-    {
-        $content = '';
-
-        if (file_exists($namespaceResolver->getWorkingDir('Resources/app/administration/src/main.js'))) {
-            $content = file_get_contents($namespaceResolver->getWorkingDir('Resources/app/administration/src/main.js'));
-        }
-
-        return is_string($content) ? $content : '';
     }
 
     /**

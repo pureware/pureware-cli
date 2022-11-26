@@ -3,6 +3,7 @@
 namespace Pureware\PurewareCli\Command\Cms;
 
 use Pureware\PurewareCli\Command\AbstractMakeCommand;
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportGenerator;
 use Pureware\PurewareCli\Maker\Cms\CmsBlockMaker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -34,6 +35,7 @@ class MakeCmsBlockCommand extends AbstractMakeCommand
         $namespaceResolver = $this->getNamespaceResolver();
         $dirs = (new CmsBlockMaker())->make($namespaceResolver, $input);
         $this->renderMaker($dirs, $input, $output, $namespaceResolver);
+        (MainJsImportGenerator::instance())->generate($input, $output, $namespaceResolver);
 
         return Command::SUCCESS;
     }

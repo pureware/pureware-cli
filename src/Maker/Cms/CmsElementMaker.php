@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Maker\Cms;
 
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportFactory;
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportGenerator;
 use Pureware\PurewareCli\Maker\AbstractMaker;
 use Pureware\PurewareCli\Maker\MakerInterface;
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
@@ -11,6 +13,7 @@ use Pureware\TemplateGenerator\TreeBuilder\Directory\Directory;
 use Pureware\TemplateGenerator\TreeBuilder\Directory\DirectoryCollection;
 use Pureware\TemplateGenerator\TreeBuilder\TreeBuilder;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\UnicodeString;
 
 class CmsElementMaker extends AbstractMaker implements MakerInterface
@@ -33,7 +36,6 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
             [
                 'elementName' => $cmsElementName,
                 'moduleName' => 'sw-cms',
-                'mainJsContent' => $this->getMainJsContent($namespaceResolver),
             ]
         );
 
@@ -42,6 +44,15 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
 
         $directory = $builder->buildTree($this->getTemplatePath('Cms/Element'), $namespaceResolver->getFullNamespace($subDirectory), $subDirectory);
         $generator->generate($directory);
+
+        MainJsImportGenerator::instance()->addImport(
+            (new MainJsImportFactory())->createImport(
+                sprintf(
+                    'module/sw-cms/elements/%s',
+                    (new AsciiSlugger())->slug((new UnicodeString($cmsElementName))->snake()->toString())->toString()
+                )
+            )
+        );
 
         $snippetDirectory = 'Resources/app/administration/src/module/';
         $moduleName = 'sw-cms';
@@ -75,17 +86,6 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
         }
 
         return (new DirectoryCollection([$directory]))->merge($snippetCollection)->merge($storefrontCollection);
-    }
-
-    protected function getMainJsContent(NamespaceResolverInterface $namespaceResolver): string
-    {
-        $content = '';
-
-        if (file_exists($namespaceResolver->getWorkingDir('Resources/app/administration/src/main.js'))) {
-            $content = file_get_contents($namespaceResolver->getWorkingDir('Resources/app/administration/src/main.js'));
-        }
-
-        return is_string($content) ? $content : '';
     }
 
     /**
