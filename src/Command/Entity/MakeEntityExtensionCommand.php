@@ -11,7 +11,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MakeEntityExtensionCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
-    /** @var string  */
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:entity:extension';
 
     protected function configure(): void

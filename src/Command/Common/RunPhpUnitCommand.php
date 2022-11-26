@@ -49,7 +49,7 @@ class RunPhpUnitCommand extends \Pureware\PurewareCli\Command\AbstractMakeComman
         }
 
         $command = sprintf('docker compose exec %s vendor/bin/phpunit --configuration="%s" %s', $input->getOption('dockerImage'), 'custom/plugins/' . $pluginName, $input->getOption('options'));
-//        $command = sprintf('docker exec %s vendor/bin/phpunit --configuration="%s" %s', $input->getOption('container'), );
+        //        $command = sprintf('docker exec %s vendor/bin/phpunit --configuration="%s" %s', $input->getOption('container'), );
 
         $cli = Process::fromShellCommandline($command, null, null, null, null);
         $cli->setTty(true);

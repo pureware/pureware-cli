@@ -13,7 +13,6 @@ class ServiceFactory
             ->setTag($tag);
     }
 
-
     public function generateEntityServiceTag(string $namespace, string $tag, string $entity): ServiceInterface
     {
         return (new ServiceEntityTag())

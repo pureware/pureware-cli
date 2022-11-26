@@ -70,7 +70,7 @@ class EntityMaker extends AbstractMaker implements MakerInterface
             (new ServiceFactory())->generateEntityServiceTag(
                 $namespaceResolver->getFullNamespace($subDirPath . '/' . $entityName . 'Definition'),
                 'shopware.entity.definition',
-                (new UnicodeString( $input->getOption('prefix') . $entityName ))->snake()->toString()
+                (new UnicodeString($input->getOption('prefix') . $entityName))->snake()->toString()
             )
         );
 

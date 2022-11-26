@@ -40,7 +40,6 @@ class ExecInContainerCommand extends \Pureware\PurewareCli\Command\AbstractMakeC
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
         $command = sprintf('docker compose exec %s bash', $input->getOption('dockerImage'));
 
         $cli = Process::fromShellCommandline($command, null, null, null, null);
