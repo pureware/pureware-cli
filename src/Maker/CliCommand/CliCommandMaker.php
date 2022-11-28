@@ -30,19 +30,16 @@ class CliCommandMaker extends AbstractMaker implements MakerInterface
             $cliCommandName = (new AsciiSlugger())->slug((new UnicodeString($commandName))->snake()->toString());
 
             if ($input->getOption('prefix')) {
-                $cliCommandName = $input->getOption('prefix') .':'. $cliCommandName;
+                $cliCommandName = $input->getOption('prefix') . ':' . $cliCommandName;
             }
         }
         $commandName .= 'Command';
-
-
-
 
         $generator = $this->getDirectoryGenerator($namespaceResolver, $input, $subDirectory);
         $generator->getParser()->setTemplateData(
             [
                 'commandName' => $commandName,
-                'cliCommandName' => $cliCommandName
+                'cliCommandName' => $cliCommandName,
             ]
         );
 
