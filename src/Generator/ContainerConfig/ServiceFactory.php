@@ -26,4 +26,11 @@ class ServiceFactory
         return (new ServiceController())
             ->setServiceId($namespace);
     }
+
+    public function generateScheduledTask(string $taskNamespace, string $handlerNamespace): ServiceInterface
+    {
+        return (new ScheduledTask())
+            ->setHandlerServiceId($handlerNamespace)
+            ->setServiceId($taskNamespace);
+    }
 }
