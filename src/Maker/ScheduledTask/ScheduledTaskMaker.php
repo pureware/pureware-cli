@@ -23,13 +23,12 @@ class ScheduledTaskMaker extends AbstractMaker implements MakerInterface
         $taskName = (new UnicodeString($input->getArgument('name')))->camel()->title()->toString();
         $taskName = preg_replace('/Task$/', '', $taskName) . 'Task';
 
-
         $generator = $this->getDirectoryGenerator($namespaceResolver, $input, $subDirectory);
         $generator->getParser()->setTemplateData(
             [
                 'taskName' => $taskName,
                 'prefix' => $input->getOption('prefix'),
-                'defaultInterval' => $input->getOption('interval')
+                'defaultInterval' => $input->getOption('interval'),
             ]
         );
 

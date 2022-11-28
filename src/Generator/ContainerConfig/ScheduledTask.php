@@ -36,5 +36,4 @@ class ScheduledTask extends AbstractService implements ServiceInterface
         $this->handlerServiceId = $handlerServiceId;
         return $this;
     }
-
 }

@@ -67,8 +67,7 @@ class ServiceTagGenerator
         }
 
         $endTag = '</services>';
-        if (!str_contains($endTag, $servicesFile)) {
-
+        if (! str_contains($endTag, $servicesFile)) {
             $output->writeln(sprintf('<comment>Could not add service tag automatically. No <services></services> Tag found in file %s</comment>', $path));
             $output->writeln('Register following services to DI Container');
             $output->writeln($newContent);
