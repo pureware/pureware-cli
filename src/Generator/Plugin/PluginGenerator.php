@@ -36,17 +36,26 @@ class PluginGenerator implements GeneratorInterface
         $this->pluginName = $input->getArgument('pluginName');
 
         $io = new SymfonyStyle($input, $output);
-        $io->progressStart(4);
+        $io->progressStart($this->pluginName ? 3 : 4);
         if (! $this->pluginName) {
-            $this->pluginName = $io->ask('Name of the plugin');
+            $this->pluginName = $io->ask('Name of the plugin in PascalCase');
+            $io->writeln('');
+            $io->progressAdvance(1);
         }
+
 
         if (empty($this->pluginName)) {
             throw new \RuntimeException('You need to pass a plugin name');
         }
 
+        $this->resolveNamespace();
+        $io->writeln('');
+        $this->namespace = $io->ask('Base namespace (leave empty to accept)', $this->namespace); /** @todo validate input */
+        $io->progressAdvance(1);
+
         $this->shopwareVersion = $input->getOption('shopwareVersion') ?? $this->getLatestShopwareVersion();
         $dockwareVersion = $this->getDockwareVersion($input->getOption('shopwareVersion'));
+        $io->info('Checking shopware and dockware version...');
         if (! version_compare($this->shopwareVersion, $dockwareVersion, '==')) {
             $io->warning(sprintf('Could not match the dockware version for shopware v%s. Latest dockware is %s', $this->shopwareVersion, $dockwareVersion));
             if ($io->askQuestion(new ConfirmationQuestion('Do you want to choose a dockware and shopware version manually'))) {
@@ -58,10 +67,9 @@ class PluginGenerator implements GeneratorInterface
         if (! version_compare($this->shopwareVersion, '6', '>=')) {
             throw new \RuntimeException('The Plugin Generator only works for shopware 6');
         }
+        $io->progressAdvance(1);
 
-        $this->resolveNamespace();
-
-        $this->namespace = $io->ask('Base namespace', $this->namespace); /** @todo validate input */
+        $io->info('Generating plugin...');
 
         $workingDir = $input->getOption('workingDir') ?? getcwd();
         $this->workingDir = rtrim($workingDir, DIRECTORY_SEPARATOR);
@@ -83,7 +91,6 @@ class PluginGenerator implements GeneratorInterface
                 'containerName' => 'shop_plugin',
             ]
         );
-        $io->progressAdvance(1);
 
         $generator = new DirectoryGenerator($pluginPath, $parser);
         if ($input->getOption('force')) {
@@ -91,15 +98,14 @@ class PluginGenerator implements GeneratorInterface
         }
 
         $directory = (new TreeBuilder())->buildTree(__DIR__ . '/../../Resources/skeleton/Plugin', $this->pluginName ?: '');
-        $io->progressAdvance(1);
 
         $generator->generate($directory);
 
+        $io->info('Installing composer dependencies...');
+
         $commands = [
-            $this->findComposer() . ' install --working-dir=' . $pluginPath,
-            $this->findComposer() . ' require --dev phpstan/phpstan phpunit/phpunit --working-dir=' . $pluginPath,
-            sprintf('echo "%s"', 'PURE installed composer dependencies'),
-            sprintf('ls -la %s', $pluginPath),
+            $this->findComposer() . ' install -q --working-dir=' . $pluginPath,
+            $this->findComposer() . ' require -q --dev phpstan/phpstan phpunit/phpunit --working-dir=' . $pluginPath
         ];
 
         $this->executeCommands($commands, $output);
@@ -108,7 +114,7 @@ class PluginGenerator implements GeneratorInterface
 
         $messages = [
             '',
-            sprintf(' ✓ %s %s: %s', $this->pluginName, 'Plugin created. Change directory', str_replace($_SERVER['HOME'], '~', $pluginPath)),
+            sprintf('✓ %s %s: %s', $this->pluginName, 'Plugin created. Change directory', str_replace($_SERVER['HOME'], '~', $pluginPath)),
             '✓ Installed composer dependencies',
         ];
 
@@ -173,6 +179,7 @@ class PluginGenerator implements GeneratorInterface
     protected function executeCommands(array $commands, OutputInterface $output): Process
     {
         $cli = Process::fromShellCommandline(implode(' && ', $commands));
+        $cli->disableOutput();
         $cli->setTty(false);
 
         $cli->run(function ($type, $line) use ($output) {
