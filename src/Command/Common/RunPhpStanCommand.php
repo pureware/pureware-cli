@@ -24,14 +24,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class RunPhpStanCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'phpstan';
 
-    public function __construct(string $name = null)
-    {
-        parent::__construct($name);
-    }
-
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(self::$defaultName)
@@ -53,5 +51,4 @@ class RunPhpStanCommand extends \Pureware\PurewareCli\Command\AbstractMakeComman
 
         return Command::SUCCESS;
     }
-
 }

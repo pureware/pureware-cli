@@ -24,45 +24,40 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class RunPhpUnitCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'test:phpunit';
 
-    public function __construct(string $name = null)
-    {
-        parent::__construct($name);
-    }
-
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(self::$defaultName)
             ->setDescription('Run PHP Unit inside the docker container')
             ->addArgument('pluginName', InputArgument::OPTIONAL, 'The name of the plugin you want to test. (optional, default will be the current plugin)', null)
-            ->addOption('container', 'c', InputOption::VALUE_OPTIONAL , 'The docker container name', 'shop_plugin')
-            ->addOption('options', null, InputOption::VALUE_OPTIONAL  , 'The options that are added to the phpunit command as string i.e.  --options="--testdox"', '--colors=always --testdox');
+            ->addOption('dockerImage', 'd', InputOption::VALUE_OPTIONAL, 'The docker image name', 'shop')
+            ->addOption('options', null, InputOption::VALUE_OPTIONAL, 'The options that are added to the phpunit command as string i.e.  --options="--testdox"', '--colors=always --testdox');
         parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
         $pluginName = $input->getArgument('pluginName');
-        if (!$input->getArgument('pluginName')) {
+        if (! $input->getArgument('pluginName')) {
             $resolver = $this->getNamespaceResolver();
             $pluginName = $resolver->getPluginName();
         }
 
-        $command = sprintf('docker exec %s vendor/bin/phpunit --configuration="%s" %s', $input->getOption('container'),  'custom/plugins/' . $pluginName, $input->getOption('options'));
+        $command = sprintf('docker compose exec %s vendor/bin/phpunit --configuration="%s" %s', $input->getOption('dockerImage'), 'custom/plugins/' . $pluginName, $input->getOption('options'));
+        //        $command = sprintf('docker exec %s vendor/bin/phpunit --configuration="%s" %s', $input->getOption('container'), );
 
-        $cli = Process::fromShellCommandline($command, null, null, null, 240);
+        $cli = Process::fromShellCommandline($command, null, null, null, null);
         $cli->setTty(true);
 
         $cli->run(function ($type, $line) use ($output) {
             $output->write($line);
         });
 
-
-
         return Command::SUCCESS;
     }
-
 }

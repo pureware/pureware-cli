@@ -12,14 +12,13 @@ use Symfony\Component\Console\Input\InputInterface;
 
 class HydratorMaker extends EntityDependentMaker implements MakerInterface
 {
-
-    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection {
-
+    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
+    {
         $subDirectory = $this->getSubDirectory($input, $options);
         $generator = $this->getDirectoryGenerator($namespaceResolver, $input, $subDirectory);
         $generator->getParser()->setTemplateData(
             [
-                'entityName' => $options['entityName'] ?? $input->getOption('entityName')
+                'entityName' => $options['entityName'] ?? $input->getOption('entityName'),
             ]
         );
 
@@ -34,5 +33,4 @@ class HydratorMaker extends EntityDependentMaker implements MakerInterface
 
         return new DirectoryCollection([$hydratorDirectory]);
     }
-
 }

@@ -3,7 +3,7 @@
 namespace Pureware\PurewareCli\Tests\Plugin;
 
 use PHPUnit\Framework\TestCase;
-use Pureware\PurewareCli\Command\New\NewPluginCommand;
+use Pureware\PurewareCli\Command\Generators\NewPluginCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -21,23 +21,23 @@ class PluginGeneratorTest extends TestCase
 
         $this->assertDirectoryDoesNotExist($fullPath, 'Plugin still exist');
 
-
         $application = new Application();
+        $application->setAutoExit(true);
         $application->add(new NewPluginCommand());
         $command = $application->find('new:plugin');
         $command = new CommandTester($command);
-        $execute = $command->execute(
+        $command->execute(
             [
                 'pluginName' => $testPluginName,
                 '--workingDir' => $executeDirectory,
                 '--git' => true,
-                '--quiet' => true
+                '--quiet' => true,
+                '--no-interaction' => true,
             ]
         );
 
         $this->assertDirectoryExists($fullPath, 'Plugin dir does not exists');
         $this->assertDirectoryExists($fullPath . DIRECTORY_SEPARATOR . '.git', 'Git dir does not exists');
-
     }
 
     public function test_command_creates_new_plugin_with_shopware_version()
@@ -52,23 +52,23 @@ class PluginGeneratorTest extends TestCase
 
         $this->assertDirectoryDoesNotExist($fullPath, 'Plugin still exist');
 
-
         $application = new Application();
+        $application->setAutoExit(true);
         $application->add(new NewPluginCommand());
         $command = $application->find('new:plugin');
         $command = new CommandTester($command);
-        $execute = $command->execute(
+        $command->execute(
             [
                 'pluginName' => $testPluginName,
                 '--workingDir' => $executeDirectory,
                 '--git' => true,
                 '--quiet' => true,
-                '--shopwareVersion' => '6.4.15.1'
+                '--shopwareVersion' => '6.4.15.1',
+                '--no-interaction' => true,
             ]
         );
 
         $this->assertDirectoryExists($fullPath, 'Plugin dir does not exists');
         $this->assertDirectoryExists($fullPath . DIRECTORY_SEPARATOR . '.git', 'Git dir does not exists');
-
     }
 }

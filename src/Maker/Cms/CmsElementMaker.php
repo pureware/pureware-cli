@@ -1,7 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Pureware\PurewareCli\Maker\Cms;
 
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportFactory;
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportGenerator;
 use Pureware\PurewareCli\Maker\AbstractMaker;
 use Pureware\PurewareCli\Maker\MakerInterface;
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
@@ -9,11 +13,11 @@ use Pureware\TemplateGenerator\TreeBuilder\Directory\Directory;
 use Pureware\TemplateGenerator\TreeBuilder\Directory\DirectoryCollection;
 use Pureware\TemplateGenerator\TreeBuilder\TreeBuilder;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\UnicodeString;
 
 class CmsElementMaker extends AbstractMaker implements MakerInterface
 {
-
     private MakerInterface $cmsElementResolverMaker;
 
     public function __construct(
@@ -22,7 +26,8 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
         $this->cmsElementResolverMaker = $cmsElementResolverMaker;
     }
 
-    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection {
+    public function make(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
+    {
         $subDirectory = 'Resources/app/administration/src';
         $cmsElementName = $options['elementName'] ?? $input->getArgument('name');
 
@@ -31,7 +36,6 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
             [
                 'elementName' => $cmsElementName,
                 'moduleName' => 'sw-cms',
-                'mainJsContent' => $this->getMainJsContent($namespaceResolver)
             ]
         );
 
@@ -41,26 +45,42 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
         $directory = $builder->buildTree($this->getTemplatePath('Cms/Element'), $namespaceResolver->getFullNamespace($subDirectory), $subDirectory);
         $generator->generate($directory);
 
+        MainJsImportGenerator::instance()->addImport(
+            (new MainJsImportFactory())->createImport(
+                sprintf(
+                    'module/sw-cms/elements/%s',
+                    (new AsciiSlugger())->slug((new UnicodeString($cmsElementName))->snake()->toString())->toString()
+                )
+            )
+        );
+
         $snippetDirectory = 'Resources/app/administration/src/module/';
         $moduleName = 'sw-cms';
-
 
         // like: sw-cms.elements.camelCaseCmsElementName.label => YouCustomLabel
         $baseSnippet = [
             'sw-cms' => [
                 'elements' => [
                     ( new UnicodeString($options['elementName'] ?? $input->getArgument('name')))->camel()->toString() => [
-                        'label' => 'Your Custom Label'
-                    ]
-                ]
-            ]
+                        'label' => 'Your Custom Label',
+                    ],
+                ],
+            ],
         ];
 
-        $snippetCollection = $this->makeSnippetFiles($namespaceResolver, $input, ['subDirectory' => $snippetDirectory, 'moduleName' => $moduleName, 'baseSnippet' => json_encode($baseSnippet, JSON_PRETTY_PRINT) ?: '']);
-        $storefrontCollection = $this->makeStorefrontElementFile($namespaceResolver, $input, ['elementName' => $cmsElementName]);
+        $snippetCollection = $this->makeSnippetFiles($namespaceResolver, $input, [
+            'subDirectory' => $snippetDirectory,
+            'moduleName' => $moduleName,
+            'baseSnippet' => json_encode($baseSnippet, JSON_PRETTY_PRINT) ?: '',
+        ]);
+        $storefrontCollection = $this->makeStorefrontElementFile($namespaceResolver, $input, [
+            'elementName' => $cmsElementName,
+        ]);
 
         if ($input->getOption('resolver')) {
-            $resolver = $this->cmsElementResolverMaker->make($namespaceResolver, $input, ['elementName' => $cmsElementName]);
+            $resolver = $this->cmsElementResolverMaker->make($namespaceResolver, $input, [
+                'elementName' => $cmsElementName,
+            ]);
 
             return (new DirectoryCollection([$directory]))->merge($snippetCollection)->merge($storefrontCollection)->merge($resolver);
         }
@@ -68,23 +88,12 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
         return (new DirectoryCollection([$directory]))->merge($snippetCollection)->merge($storefrontCollection);
     }
 
-    protected function getMainJsContent(NamespaceResolverInterface $namespaceResolver): string {
-        $content = '';
-
-        if (file_exists($namespaceResolver->getWorkingDir('Resources/app/administration/src/main.js'))) {
-            $content = file_get_contents($namespaceResolver->getWorkingDir('Resources/app/administration/src/main.js'));
-        }
-
-        return is_string($content) ? $content : '';
-    }
-
     /**
      * @param array<string> $options
      */
     protected function makeStorefrontElementFile(NamespaceResolverInterface $namespaceResolver, InputInterface $input, array $options = []): DirectoryCollection
     {
-
-        if (!$options['elementName']) {
+        if ($options['elementName'] === '' || $options['elementName'] === '0') {
             throw new \RuntimeException('You need to pass a elementName to create storefront file');
         }
 
@@ -93,7 +102,7 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
         $generator = $this->getDirectoryGenerator($namespaceResolver, $input, $subdirectory);
         $generator->getParser()->setTemplateData(
             [
-                'elementName' => $options['elementName']
+                'elementName' => $options['elementName'],
             ]
         );
 
@@ -103,7 +112,4 @@ class CmsElementMaker extends AbstractMaker implements MakerInterface
 
         return $collection;
     }
-
-
-
 }

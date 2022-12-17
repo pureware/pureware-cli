@@ -21,9 +21,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class MakeEntityHydratorCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:entity:hydrator';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(self::$defaultName)
@@ -37,11 +40,10 @@ class MakeEntityHydratorCommand extends \Pureware\PurewareCli\Command\AbstractMa
         $namespaceResolver = $this->getNamespaceResolver();
         $dirs = (new HydratorMaker())->make($namespaceResolver, $input, [
             'entityName' => $input->getArgument('name'),
-            'workingDir' => $input->getOption('workingDir')
+            'workingDir' => $input->getOption('workingDir'),
         ]);
         $this->renderMaker($dirs, $input, $output, $namespaceResolver);
 
         return Command::SUCCESS;
     }
-
 }

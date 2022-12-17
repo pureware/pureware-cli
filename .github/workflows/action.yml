@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+
+  phpunit:
+    name: PHPUnit with PHP ${{ matrix.php }} (${{ matrix.operating-system }})
+    runs-on: ${{ matrix.operating-system }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        operating-system: [macOS-latest, ubuntu-latest ]
+        php: [ '7.4', '8.0' ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v2
+
+      - name: Run test suite on PHP ${{ matrix.php }}
+        run: vendor/bin/phpunit --testdox
+
+  ecs:
+    name: Easy Coding Standard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ramsey/composer-install@v2
+      - run: vendor/bin/ecs
+
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ramsey/composer-install@v2
+      - run: vendor/bin/phpstan

@@ -1,4 +1,5 @@
 <?php
+
 namespace Pureware\PurewareCli\Command;
 
 use Pureware\PurewareCli\Resolver\NamespaceResolverInterface;
@@ -15,18 +16,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 abstract class AbstractMakeCommand extends Command
 {
-    /**
-     * @return void
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Override files. Be careful when using!')
-            ->addOption('workingDir', null, InputOption::VALUE_OPTIONAL, 'The path where you want to create the new plugin', null);
+            ->addOption('workingDir', null, InputOption::VALUE_OPTIONAL, 'The path where you want to create the data', null);
         parent::configure();
     }
 
-    protected function getNamespaceResolver(): NamespaceResolverInterface {
+    protected function getNamespaceResolver(): NamespaceResolverInterface
+    {
         $pluginNamespaceResolver = new PluginNamespaceResolver();
         $composerJson = null;
         $composerJsonPath = getcwd() . DIRECTORY_SEPARATOR . 'composer.json';
@@ -44,8 +43,8 @@ abstract class AbstractMakeCommand extends Command
         return $pluginNamespaceResolver;
     }
 
-    protected function renderMaker(DirectoryCollection $dirs, InputInterface $input, OutputInterface $output, NamespaceResolverInterface $namespaceResolver): void {
-
+    protected function renderMaker(DirectoryCollection $dirs, InputInterface $input, OutputInterface $output, NamespaceResolverInterface $namespaceResolver): void
+    {
         $io = new SymfonyStyle($input, $output);
         $workingPath = $namespaceResolver->getWorkingDir();
         $home = $_SERVER['HOME'];
@@ -58,14 +57,14 @@ abstract class AbstractMakeCommand extends Command
         }
     }
 
-    protected function renderDir(Directory $directory, SymfonyStyle $io, int $depth = 0): void {
-
+    protected function renderDir(Directory $directory, SymfonyStyle $io, int $depth = 0): void
+    {
         /** @var File $file */
         foreach ($directory->getFiles() as $file) {
             $this->addFile($io, $file->getParsedFileName(), $depth + 1);
         }
 
-        if (!$directory->getDirectories()) {
+        if ($directory->getDirectories() === null) {
             return;
         }
 
@@ -74,9 +73,9 @@ abstract class AbstractMakeCommand extends Command
         }
     }
 
-    protected function addFile(SymfonyStyle $io, string $path, int $depth = 0): void {
+    protected function addFile(SymfonyStyle $io, string $path, int $depth = 0): void
+    {
         $space = str_repeat("  ", $depth);
         $io->writeln(sprintf('|%s -- %s', $space, $path));
     }
-
 }

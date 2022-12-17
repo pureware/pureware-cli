@@ -20,9 +20,12 @@ use Symfony\Component\String\UnicodeString;
 
 class MakeMigrationCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:migration';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(self::$defaultName)
@@ -36,9 +39,10 @@ class MakeMigrationCommand extends \Pureware\PurewareCli\Command\AbstractMakeCom
         $input->setOption('force', true);
         $suffix = (new UnicodeString(implode(' ', $input->getArgument('suffix'))))->camel()->title();
         $namespaceResolver = $this->getNamespaceResolver();
-        $dirs = (new MigrationMaker())->make($namespaceResolver, $input, ['suffix' => $suffix]);
+        $dirs = (new MigrationMaker())->make($namespaceResolver, $input, [
+            'suffix' => $suffix,
+        ]);
         $this->renderMaker($dirs, $input, $output, $namespaceResolver);
-
 
         return Command::SUCCESS;
     }

@@ -1,5 +1,6 @@
 <?php
-namespace Pureware\PurewareCli\Command\New;
+
+namespace Pureware\PurewareCli\Command\Generators;
 
 use Pureware\PurewareCli\Generator\Plugin\PluginGenerator;
 use Symfony\Component\Console\Command\Command;
@@ -10,9 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class NewPluginCommand extends Command
 {
-    private array $allowedTypes = ['plugin', 'project'];
-
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('new:plugin')
@@ -28,18 +27,16 @@ class NewPluginCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln(PHP_EOL."<fg=blue>
+        $output->writeln(PHP_EOL . "<fg=blue>
  _____  _    _ _____  ______ 
 |  __ \| |  | |  __ \|  ____|
 | |__) | |  | | |__) | |__   
 |  ___/| |  | |  _  /|  __|  
 | |    | |__| | | \ \| |____ 
-|_|     \____/|_|  \_\______| </>".PHP_EOL.PHP_EOL);
+|_|     \____/|_|  \_\______| </>" . PHP_EOL . PHP_EOL);
 
-        $output->writeln('Pure installer');
+        $output->writeln(PHP_EOL);
 
         return (new PluginGenerator())->generate($input, $output);
-
-        return self::SUCCESS;
     }
 }

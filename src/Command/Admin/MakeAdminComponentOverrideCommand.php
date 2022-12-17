@@ -3,6 +3,7 @@
 namespace Pureware\PurewareCli\Command\Admin;
 
 use Pureware\PurewareCli\Command\AbstractMakeCommand;
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportGenerator;
 use Pureware\PurewareCli\Maker\Admin\AdminComponentMaker;
 use Pureware\PurewareCli\Maker\Admin\AdminComponentOverrideMaker;
 use Symfony\Component\Console\Command\Command;
@@ -13,7 +14,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MakeAdminComponentOverrideCommand extends AbstractMakeCommand
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:admin-component-override';
 
     protected function configure(): void
@@ -30,6 +33,7 @@ class MakeAdminComponentOverrideCommand extends AbstractMakeCommand
         $namespaceResolver = $this->getNamespaceResolver();
         $dirs = (new AdminComponentOverrideMaker())->make($namespaceResolver, $input);
         $this->renderMaker($dirs, $input, $output, $namespaceResolver);
+        (MainJsImportGenerator::instance())->generate($input, $output, $namespaceResolver);
 
         return Command::SUCCESS;
     }

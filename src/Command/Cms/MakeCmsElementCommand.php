@@ -3,6 +3,7 @@
 namespace Pureware\PurewareCli\Command\Cms;
 
 use Pureware\PurewareCli\Command\AbstractMakeCommand;
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportGenerator;
 use Pureware\PurewareCli\Maker\Cms\CmsElementMaker;
 use Pureware\PurewareCli\Maker\Cms\CmsElementResolverMaker;
 use Symfony\Component\Console\Command\Command;
@@ -13,7 +14,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MakeCmsElementCommand extends AbstractMakeCommand
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:cms-element';
 
     protected function configure(): void
@@ -23,7 +26,7 @@ class MakeCmsElementCommand extends AbstractMakeCommand
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the CMS Element')
             ->setDescription('Create new CMS Element')
             ->addOption('resolver', 'r', InputOption::VALUE_NONE, 'Generate ams resolver', null)
-            ->addOption('snippetLanguages', 's',InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Additional migration name', ['de-DE', 'en-GB']);
+            ->addOption('snippetLanguages', 's', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Additional migration name', ['de-DE', 'en-GB']);
         parent::configure();
     }
 
@@ -32,6 +35,7 @@ class MakeCmsElementCommand extends AbstractMakeCommand
         $namespaceResolver = $this->getNamespaceResolver();
         $dirs = (new CmsElementMaker(new CmsElementResolverMaker()))->make($namespaceResolver, $input);
         $this->renderMaker($dirs, $input, $output, $namespaceResolver);
+        (MainJsImportGenerator::instance())->generate($input, $output, $namespaceResolver);
 
         return Command::SUCCESS;
     }

@@ -3,6 +3,7 @@
 namespace Pureware\PurewareCli\Command\Cms;
 
 use Pureware\PurewareCli\Command\AbstractMakeCommand;
+use Pureware\PurewareCli\Generator\MainJs\MainJsImportGenerator;
 use Pureware\PurewareCli\Maker\Cms\CmsBlockMaker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,7 +13,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MakeCmsBlockCommand extends AbstractMakeCommand
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:cms-block';
 
     protected function configure(): void
@@ -22,8 +25,8 @@ class MakeCmsBlockCommand extends AbstractMakeCommand
             ->setName(self::$defaultName)
             ->setDescription('Create new CMS Block')
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the CMS Block')
-            ->addOption('category', 'c',InputOption::VALUE_OPTIONAL, 'Choose one Category for the CMS Block ' . $categories, 'commerce')
-            ->addOption('snippetLanguages', 's',InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Additional migration name', ['de-DE', 'en-GB']);
+            ->addOption('category', 'c', InputOption::VALUE_OPTIONAL, 'Choose one Category for the CMS Block ' . $categories, 'commerce')
+            ->addOption('snippetLanguages', 's', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Additional migration name', ['de-DE', 'en-GB']);
         parent::configure();
     }
 
@@ -32,6 +35,7 @@ class MakeCmsBlockCommand extends AbstractMakeCommand
         $namespaceResolver = $this->getNamespaceResolver();
         $dirs = (new CmsBlockMaker())->make($namespaceResolver, $input);
         $this->renderMaker($dirs, $input, $output, $namespaceResolver);
+        (MainJsImportGenerator::instance())->generate($input, $output, $namespaceResolver);
 
         return Command::SUCCESS;
     }

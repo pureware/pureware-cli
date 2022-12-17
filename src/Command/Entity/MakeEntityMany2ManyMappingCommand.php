@@ -22,9 +22,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class MakeEntityMany2ManyMappingCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:entity:many2many';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(self::$defaultName)
@@ -40,11 +43,10 @@ class MakeEntityMany2ManyMappingCommand extends \Pureware\PurewareCli\Command\Ab
         $dirs = (new Many2ManyMaker())->make($namespaceResolver, $input, [
             'entityName' => $input->getArgument('name'),
             'workingDir' => $input->getOption('workingDir'),
-            'prefix' => $input->getOption('prefix')
+            'prefix' => $input->getOption('prefix'),
         ]);
         $this->renderMaker($dirs, $input, $output, $namespaceResolver);
 
         return Command::SUCCESS;
     }
-
 }

@@ -8,6 +8,7 @@ use Pureware\TemplateGenerator\Parser\TwigParser;
 use Pureware\TemplateGenerator\TreeBuilder\TreeBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\Input;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -19,25 +20,43 @@ use Symfony\Component\String\UnicodeString;
 class PluginGenerator implements GeneratorInterface
 {
     public const DEFAULT_VERSION = '6.4.15.0';
+
     private ?string $pluginName = null;
+
     private ?string $workingDir = null;
+
     private string $namespace;
+
     private string $composerName;
+
     private string $shopwareVersion;
 
-    public function generate(Input $input, Output $output): int
+    public function generate(InputInterface $input, OutputInterface $output): int
     {
         $this->pluginName = $input->getArgument('pluginName');
 
         $io = new SymfonyStyle($input, $output);
-        $io->progressStart(4);
-        if (!$this->pluginName) {
-            $this->pluginName = $io->ask('Name of the plugin');
+        $io->progressStart($this->pluginName ? 3 : 4);
+        if (! $this->pluginName) {
+            $this->pluginName = $io->ask('Name of the plugin in PascalCase');
+            $io->writeln('');
+            $io->progressAdvance(1);
         }
+
+
+        if (empty($this->pluginName)) {
+            throw new \RuntimeException('You need to pass a plugin name');
+        }
+
+        $this->resolveNamespace();
+        $io->writeln('');
+        $this->namespace = $io->ask('Base namespace (leave empty to accept)', $this->namespace); /** @todo validate input */
+        $io->progressAdvance(1);
 
         $this->shopwareVersion = $input->getOption('shopwareVersion') ?? $this->getLatestShopwareVersion();
         $dockwareVersion = $this->getDockwareVersion($input->getOption('shopwareVersion'));
-        if (version_compare($this->shopwareVersion, $dockwareVersion, '==') === false) {
+        $io->info('Checking shopware and dockware version...');
+        if (! version_compare($this->shopwareVersion, $dockwareVersion, '==')) {
             $io->warning(sprintf('Could not match the dockware version for shopware v%s. Latest dockware is %s', $this->shopwareVersion, $dockwareVersion));
             if ($io->askQuestion(new ConfirmationQuestion('Do you want to choose a dockware and shopware version manually'))) {
                 $dockwareVersion = $io->ask('Input a dockware and shopware version', $dockwareVersion);
@@ -45,13 +64,12 @@ class PluginGenerator implements GeneratorInterface
             }
         }
 
-        if (version_compare($this->shopwareVersion, '6', '>=') === false) {
+        if (! version_compare($this->shopwareVersion, '6', '>=')) {
             throw new \RuntimeException('The Plugin Generator only works for shopware 6');
         }
+        $io->progressAdvance(1);
 
-        $this->resolveNamespace();
-
-        $this->namespace = $io->ask('Base namespace', $this->namespace); /** @todo validate input */
+        $io->info('Generating plugin...');
 
         $workingDir = $input->getOption('workingDir') ?? getcwd();
         $this->workingDir = rtrim($workingDir, DIRECTORY_SEPARATOR);
@@ -68,29 +86,26 @@ class PluginGenerator implements GeneratorInterface
                 'composerDescriptionDe' => $this->pluginName,
                 'phpVersion' => version_compare('6.5', $this->shopwareVersion) > 0 ? '^7.4.3 || ^8.0' : '^8.0',
                 'dockwarePhpVersion' => version_compare('6.5', $this->shopwareVersion) > 0 ? '7.4' : '8.0',
-                'shopwareVersion' =>  '~' . pathinfo( $this->shopwareVersion, PATHINFO_FILENAME),
+                'shopwareVersion' => '~' . pathinfo($this->shopwareVersion, PATHINFO_FILENAME),
                 'dockwareVersion' => $dockwareVersion,
-                'containerName' => 'shop_plugin'
+                'containerName' => 'shop_plugin',
             ]
         );
-        $io->progressAdvance(1);
 
         $generator = new DirectoryGenerator($pluginPath, $parser);
         if ($input->getOption('force')) {
             $generator->setForce(true);
         }
 
-        $directory = (new TreeBuilder())->buildTree(__DIR__ . '/../../Resources/skeleton/Plugin', $this->pluginName);
-        $io->progressAdvance(1);
+        $directory = (new TreeBuilder())->buildTree(__DIR__ . '/../../Resources/skeleton/Plugin', $this->pluginName ?: '');
 
         $generator->generate($directory);
 
+        $io->info('Installing composer dependencies...');
+
         $commands = [
-            $this->findComposer() . ' install --working-dir=' . $pluginPath,
-            $this->findComposer() . ' require --dev phpstan/phpstan phpunit/phpunit --working-dir=' . $pluginPath,
-            sprintf('echo "%s"'
-                , 'PURE installed composer dependencies'),
-            sprintf('ls -la %s', $pluginPath)
+            $this->findComposer() . ' install -q --working-dir=' . $pluginPath,
+            $this->findComposer() . ' require -q --dev phpstan/phpstan phpunit/phpunit --working-dir=' . $pluginPath
         ];
 
         $this->executeCommands($commands, $output);
@@ -99,8 +114,8 @@ class PluginGenerator implements GeneratorInterface
 
         $messages = [
             '',
-            sprintf(' ✓ %s %s: %s', $this->pluginName, 'Plugin created. Change directory', str_replace($_SERVER['HOME'], '~', $pluginPath)),
-            '✓ Installed composer dependencies'
+            sprintf('✓ %s %s: %s', $this->pluginName, 'Plugin created. Change directory', str_replace($_SERVER['HOME'], '~', $pluginPath)),
+            '✓ Installed composer dependencies',
         ];
 
         if ($input->getOption('git')) {
@@ -111,12 +126,11 @@ class PluginGenerator implements GeneratorInterface
         $io->success($messages);
 
         return Command::SUCCESS;
-
     }
 
-    public function resolveNamespace(): void {
-
-        $snakeCase = (new UnicodeString($this->pluginName))->camel()->title()->snake();
+    public function resolveNamespace(): void
+    {
+        $snakeCase = (new UnicodeString($this->pluginName ?: ''))->camel()->title()->snake();
         $strings = explode('_', $snakeCase);
         if (count($strings) < 2) {
             throw new \RuntimeException('Could not resolve a namespace for this plugin name. Provide a name with a prefix i.e. SwagPlugin');
@@ -135,13 +149,14 @@ class PluginGenerator implements GeneratorInterface
         $composerPath = getcwd() . '/composer.phar';
 
         if (file_exists($composerPath)) {
-            return '"'.PHP_BINARY.'" '.$composerPath;
+            return '"' . PHP_BINARY . '" ' . $composerPath;
         }
 
         return 'composer';
     }
 
-    private function initGit(OutputInterface $output, string $branch): void {
+    private function initGit(OutputInterface $output, string $branch): void
+    {
         if (file_exists($this->workingDir . DIRECTORY_SEPARATOR . $this->pluginName . DIRECTORY_SEPARATOR . '.git')) {
             $output->write('Git already exists. Skipping.');
             return;
@@ -158,10 +173,14 @@ class PluginGenerator implements GeneratorInterface
         $this->executeCommands($commands, $output);
     }
 
-    protected function executeCommands($commands, OutputInterface $output): Process
+    /**
+     * @param array<string> $commands
+     */
+    protected function executeCommands(array $commands, OutputInterface $output): Process
     {
-        $cli = Process::fromShellCommandline(implode(' && ', $commands));
-        $cli->setTty(true);
+        $cli = Process::fromShellCommandline(implode(' && ', $commands), null, null,null,280 );
+        $cli->disableOutput();
+        $cli->setTty(false);
 
         $cli->run(function ($type, $line) use ($output) {
             $output->write($line);
@@ -170,45 +189,46 @@ class PluginGenerator implements GeneratorInterface
         return $cli;
     }
 
-    protected function getLatestShopwareVersion(): string {
-
+    protected function getLatestShopwareVersion(): string
+    {
         try {
             $client = new \GuzzleHttp\Client();
             $get = $client->get('https://api.github.com/repos/shopware/platform/releases/latest', [
-                'content-type' => 'application/json'
+                'content-type' => 'application/json',
             ]);
             $content = $get->getBody()->getContents();
             $json = json_decode($content, true);
             return str_replace('v', '', $json['tag_name']);
-
         } catch (\Exception $exception) {
-           return self::DEFAULT_VERSION;
+            return self::DEFAULT_VERSION;
         }
     }
 
     /**
      * @param string|null $inputShopwareVersion | if version is not set or not found the latest version tag is returned
-     * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function getDockwareVersion(?string $inputShopwareVersion = null): string
     {
-
         $client = new \GuzzleHttp\Client();
-        $url = 'https://hub.docker.com/v2/repositories/dockware/dev/tags/?page_size=1&page=1';
+        $url = 'https://hub.docker.com/v2/repositories/dockware/dev/tags/?page_size=2&page=1';
 
-        if (!is_null($inputShopwareVersion)) {
-            $url  .= '&name=' . $inputShopwareVersion;
+        if (! is_null($inputShopwareVersion)) {
+            $url .= '&name=' . $inputShopwareVersion;
         }
 
         $get = $client->get($url, [
-            'content-type' => 'application/json'
+            'content-type' => 'application/json',
         ]);
         $content = $get->getBody()->getContents();
         $json = json_decode($content, true);
 
         if (empty($json['results'])) {
             return $this->getDockwareVersion();
+        }
+
+        if ($json['results'][0]['name'] === 'latest') {
+            return $json['results'][1]['name'];
         }
 
         return $json['results'][0]['name'];

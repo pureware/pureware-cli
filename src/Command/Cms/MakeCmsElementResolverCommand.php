@@ -2,6 +2,7 @@
 
 namespace Pureware\PurewareCli\Command\Cms;
 
+use Pureware\PurewareCli\Generator\ContainerConfig\ServiceTagGenerator;
 use Pureware\PurewareCli\Maker\Cms\CmsElementResolverMaker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -10,7 +11,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MakeCmsElementResolverCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:cms-resolver';
 
     protected function configure(): void
@@ -26,6 +29,7 @@ class MakeCmsElementResolverCommand extends \Pureware\PurewareCli\Command\Abstra
     {
         $namespaceResolver = $this->getNamespaceResolver();
         $dirs = (new CmsElementResolverMaker())->make($namespaceResolver, $input);
+        ServiceTagGenerator::instance()->generate($input, $output, $namespaceResolver);
         $this->renderMaker($dirs, $input, $output, $namespaceResolver);
 
         return Command::SUCCESS;

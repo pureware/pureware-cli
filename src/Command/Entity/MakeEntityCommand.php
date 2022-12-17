@@ -2,6 +2,7 @@
 
 namespace Pureware\PurewareCli\Command\Entity;
 
+use Pureware\PurewareCli\Generator\ContainerConfig\ServiceTagGenerator;
 use Pureware\PurewareCli\Maker\Entity\EntityMaker;
 use Pureware\PurewareCli\Maker\Entity\HydratorMaker;
 use Pureware\PurewareCli\Maker\Entity\Many2ManyMaker;
@@ -23,14 +24,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class MakeEntityCommand extends \Pureware\PurewareCli\Command\AbstractMakeCommand
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'make:entity';
 
-    public function __construct(string $name = null)
-    {
-        parent::__construct($name);
-    }
-
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(self::$defaultName)
@@ -48,9 +47,9 @@ class MakeEntityCommand extends \Pureware\PurewareCli\Command\AbstractMakeComman
     {
         $namespaceResolver = $this->getNamespaceResolver();
         $dirs = (new EntityMaker(new MigrationMaker(), new HydratorMaker(), new Many2ManyMaker(), new TranslationMaker()))->make($namespaceResolver, $input);
+        ServiceTagGenerator::instance()->generate($input, $output, $namespaceResolver);
         $this->renderMaker($dirs, $input, $output, $namespaceResolver);
 
         return Command::SUCCESS;
     }
-
 }
