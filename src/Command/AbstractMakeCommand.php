@@ -20,7 +20,7 @@ abstract class AbstractMakeCommand extends Command
     {
         $this
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Override files. Be careful when using!')
-            ->addOption('workingDir', null, InputOption::VALUE_OPTIONAL, 'The path where you want to create the new plugin', null);
+            ->addOption('workingDir', null, InputOption::VALUE_OPTIONAL, 'The path where you want to create the data', null);
         parent::configure();
     }
 

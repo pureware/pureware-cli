@@ -178,7 +178,7 @@ class PluginGenerator implements GeneratorInterface
      */
     protected function executeCommands(array $commands, OutputInterface $output): Process
     {
-        $cli = Process::fromShellCommandline(implode(' && ', $commands));
+        $cli = Process::fromShellCommandline(implode(' && ', $commands), null, null,null,280 );
         $cli->disableOutput();
         $cli->setTty(false);
 
@@ -211,7 +211,7 @@ class PluginGenerator implements GeneratorInterface
     private function getDockwareVersion(?string $inputShopwareVersion = null): string
     {
         $client = new \GuzzleHttp\Client();
-        $url = 'https://hub.docker.com/v2/repositories/dockware/dev/tags/?page_size=1&page=1';
+        $url = 'https://hub.docker.com/v2/repositories/dockware/dev/tags/?page_size=2&page=1';
 
         if (! is_null($inputShopwareVersion)) {
             $url .= '&name=' . $inputShopwareVersion;
@@ -225,6 +225,10 @@ class PluginGenerator implements GeneratorInterface
 
         if (empty($json['results'])) {
             return $this->getDockwareVersion();
+        }
+
+        if ($json['results'][0]['name'] === 'latest') {
+            return $json['results'][1]['name'];
         }
 
         return $json['results'][0]['name'];

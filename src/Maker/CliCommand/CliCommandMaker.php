@@ -24,6 +24,10 @@ class CliCommandMaker extends AbstractMaker implements MakerInterface
         $commandName = (new UnicodeString($input->getArgument('name')))->camel()->title()->toString();
         $commandName = preg_replace('/Command$/', '', $commandName);
 
+        if (is_null($commandName)) {
+            throw new \RuntimeException('Could not find command name');
+        }
+
         if ($input->getOption('cliName')) {
             $cliCommandName = (new AsciiSlugger())->slug((new UnicodeString($input->getOption('cliName')))->snake()->toString());
         } else {

@@ -35,7 +35,7 @@ class NewPluginCommand extends Command
 | |    | |__| | | \ \| |____ 
 |_|     \____/|_|  \_\______| </>" . PHP_EOL . PHP_EOL);
 
-        $output->writeln('Pure installer');
+        $output->writeln(PHP_EOL);
 
         return (new PluginGenerator())->generate($input, $output);
     }
